@@ -375,7 +375,7 @@ class StartCommand(
         settings.save()
 
         val vars = hashMapOf(
-            Pair("classpath", classpath.joinToString(if (profile.osName === "windows") ";" else ":")),
+            Pair("classpath", classpath.joinToString(if (profile.osName == "windows") ";" else ":")),
             Pair("user_type", "mojang"),
             Pair("auth_uuid", auth.selectedProfile.id.toString()),
             Pair("auth_player_name", auth.selectedProfile.name),
