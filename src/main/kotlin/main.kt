@@ -64,7 +64,7 @@ class EmoContext(
 }
 
 class EmoProfile {
-    private val osName: String = System.getProperty("os.name").toLowerCase().run {
+    val osName: String = System.getProperty("os.name").toLowerCase().run {
         when {
             this == "linux" -> "linux"
             this.contains("mac", true) -> "osx"
@@ -80,6 +80,8 @@ class EmoProfile {
             else -> it
         }
     }
+
+
 
     fun passesOSCheck(check: OS): Boolean {
         if (check.arch !== null && check.arch != osArch) {
@@ -369,8 +371,11 @@ class StartCommand(
             exitProcess(1)
         }
 
+        settings.addAccount(auth.saveForStorage())
+        settings.save()
+
         val vars = hashMapOf(
-            Pair("classpath", classpath.joinToString(":")),
+            Pair("classpath", classpath.joinToString(if (profile.osName === "windows") ";" else ":")),
             Pair("user_type", "mojang"),
             Pair("auth_uuid", auth.selectedProfile.id.toString()),
             Pair("auth_player_name", auth.selectedProfile.name),
