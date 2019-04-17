@@ -1,5 +1,7 @@
 package me.eater.emo.emo
 
+import com.beust.klaxon.Converter
+import com.beust.klaxon.JsonValue
 import com.beust.klaxon.Klaxon
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -11,6 +13,23 @@ val SettingsLocation = when (System.getProperty("os.name").toLowerCase()) {
     else -> Paths.get(System.getProperty("user.home"), "/.emo/settings.json")
 }
 
+private fun <T> Klaxon.convert(
+    k: kotlin.reflect.KClass<*>,
+    fromJson: (JsonValue) -> T,
+    toJson: (T) -> String,
+    isUnion: Boolean = false
+) =
+    this.converter(object : Converter {
+        @Suppress("UNCHECKED_CAST")
+        override fun toJson(value: Any) = toJson(value as T)
+
+        override fun fromJson(jv: JsonValue) = fromJson(jv) as Any
+        override fun canConvert(cls: Class<*>) = cls == k.java || (isUnion && cls.superclass == k.java)
+    })
+
+var settingsKlaxon = Klaxon()
+    .convert(UUID::class, { UUID.fromString(it.string!!) }, { "\"${it.toString()}\"" })
+
 data class Settings(
     val clientToken: String,
     var selectedAccount: String? = null,
@@ -18,14 +37,10 @@ data class Settings(
 ) {
     fun save() {
         Files.createDirectories(SettingsLocation.parent)
-        SettingsLocation.toFile().writeText(Klaxon().toJsonString(this))
+        SettingsLocation.toFile().writeText(settingsKlaxon.toJsonString(this))
     }
 
     fun addAccount(account: MutableMap<String, Any>) {
-        if (account["uuid"] is UUID) {
-            account["uuid"] = account["uuid"].toString()
-        }
-
         accounts[account["uuid"].toString()] = account
     }
 
@@ -54,7 +69,11 @@ data class Settings(
     companion object {
         fun load(): Settings {
             if (SettingsLocation.toFile().exists()) {
-                val settings: Settings? = Klaxon().parse(SettingsLocation.toFile().readText())
+                var settings: Settings? = null
+                try {
+                     settings = settingsKlaxon.parse(SettingsLocation.toFile().readText())
+                } catch (_: Exception) {}
+
                 if (settings !== null) return settings
             }
 

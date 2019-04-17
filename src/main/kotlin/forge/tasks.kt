@@ -74,6 +74,7 @@ class LoadForgeManifest : Process<EmoContext> {
             val jar = JarFile(Paths.get(context.installLocation.toString(), "forge.jar").toFile())
             val json = String(jar.getInputStream(jar.getJarEntry("version.json")).readBytes())
             context.forgeManifest = Manifest.fromJson(json)!!
+            jar.close()
         }
     }
 }

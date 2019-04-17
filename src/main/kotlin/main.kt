@@ -21,6 +21,7 @@ import me.eater.emo.minecraft.dto.manifest.*
 import me.eater.emo.minecraft.dto.minecraft_versions.Version
 import me.eater.emo.minecraft.dto.minecraft_versions.VersionsManifest
 import me.eater.emo.utils.Noop
+import me.eater.emo.utils.Workflow
 import me.eater.emo.utils.WorkflowBuilder
 import me.eater.emo.utils.slice
 import net.swiftzer.semver.SemVer
@@ -141,8 +142,8 @@ class VersionSelector(val selector: String) {
     }
 }
 
-fun runInstallJob(ctx: EmoContext) {
-    val workflow = WorkflowBuilder<EmoContext>().apply {
+fun getInstallWorkflow(ctx: EmoContext): Workflow<EmoContext> {
+    return WorkflowBuilder<EmoContext>().apply {
 
         // Minecraft
         bind(FetchVersionsManifest())
@@ -215,7 +216,10 @@ fun runInstallJob(ctx: EmoContext) {
         step("emo.create_client_lock", "emo.fetch_mods")
         step("emo.fetch_mods", null)
     }.build(ctx)
+}
 
+fun runInstallJob(ctx: EmoContext) {
+    val workflow = getInstallWorkflow(ctx)
     workflow.processStarted += {
         println(
             "Start process: ${it.step}${when (it.step) {

@@ -77,7 +77,7 @@ class Workflow<C>(
     var context: C
 ) {
     private var currentStep: String = start
-    private var executionJob: Job? = null
+    private var executionJob: Deferred<Unit>? = null
     var finished: Boolean = false
 
     val processStarted: Event<ProcessStartedEvent<C>> = Event()
@@ -88,7 +88,7 @@ class Workflow<C>(
             return
         }
 
-        executionJob = executionScope.launch {
+        executionJob = executionScope.async {
             tryProcess()
         }
     }
@@ -108,12 +108,12 @@ class Workflow<C>(
 
         val router = chain.router
 
-        val job = GlobalScope.launch {
+        val job = GlobalScope.async {
             process.execute(context)
         }
 
         processStarted(ProcessStartedEvent(currentStep, process, router))
-        job.join()
+        job.await()
         tryNext(router)
     }
 
@@ -132,7 +132,7 @@ class Workflow<C>(
 
     fun waitFor() {
         runBlocking {
-            executionJob?.join()
+            executionJob?.await()
         }
     }
 }

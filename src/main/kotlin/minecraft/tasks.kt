@@ -137,7 +137,14 @@ class ExtractNatives : Process<EmoContext> {
                     jar.getInputStream(entry).copyTo(output.toFile().outputStream())
                 }
 
-                Files.delete(path)
+                jar.close()
+
+                try {
+                    Files.delete(path)
+                } catch (e: Exception) {
+                    // ?? :( why you like this windows
+                    println("Failed to delete natives jar at: $path")
+                }
             }
         }
     }
