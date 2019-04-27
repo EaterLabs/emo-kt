@@ -3,6 +3,8 @@ package me.eater.emo.emo
 import com.beust.klaxon.Converter
 import com.beust.klaxon.JsonValue
 import com.beust.klaxon.Klaxon
+import me.eater.emo.Account
+import me.eater.emo.Instance
 import me.eater.emo.emo.dto.repository.ModpackVersion
 import java.nio.charset.Charset
 import java.nio.file.Files
@@ -48,6 +50,10 @@ data class Settings(
 
     fun addAccount(account: MutableMap<String, Any>) {
         accounts[account["uuid"].toString()] = account
+    }
+
+    fun removeAccount(uuid: String) {
+        accounts.remove(uuid)
     }
 
     fun getAccount(uuid: String): Map<String, Any> {
@@ -133,4 +139,6 @@ data class Profile(
     val name: String,
     val modpackName: String,
     val modpack: ModpackVersion
-)
+) {
+    fun getExecutor(account: Account) = MinecraftExecutor(location, account)
+}

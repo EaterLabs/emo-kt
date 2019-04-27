@@ -81,13 +81,13 @@ class FetchMinecraftLibraries : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_libraries"
 
     override suspend fun execute(context: EmoContext) {
-        parallel(context.minecraftManifest!!.getLibraries().filter { context.profile.passesRules(it.rules) }) {
+        parallel(context.minecraftManifest!!.getLibraries().filter { context.environment.passesRules(it.rules) }) {
 
             if (it.downloads.artifact !== null) {
                 download(context, it.downloads.artifact)
             }
 
-            val native = context.profile.selectNative(it)
+            val native = context.environment.selectNative(it)
             if (native !== null) {
                 download(context, native)
                 context.extractQueue.add(Pair(native, it.extract))

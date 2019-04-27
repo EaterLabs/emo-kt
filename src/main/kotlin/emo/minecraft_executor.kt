@@ -2,8 +2,7 @@ package me.eater.emo.emo
 
 import com.uchuhimo.konf.Config
 import me.eater.emo.Account
-import me.eater.emo.EmoProfile
-import me.eater.emo.Instance
+import me.eater.emo.EmoEnvironment
 import me.eater.emo.Target
 import me.eater.emo.emo.dto.ClientLock
 import me.eater.emo.emo.dto.Profile
@@ -26,7 +25,7 @@ class MinecraftExecutor(val profileLocation: String, val account: Account) {
             .parse(Paths.get(profileLocation, ".emo/client.json").toFile())!!
 
         val manifest = parseManifest(Paths.get(profileLocation, ".emo/minecraft.json").toFile().readText())
-        val profile = EmoProfile()
+        val profile = EmoEnvironment()
 
         val classpath: MutableList<String> =
             manifest.getLibraries().filter { it.downloads.artifact !== null && profile.passesRules(it.rules) }

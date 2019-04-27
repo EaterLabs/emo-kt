@@ -12,6 +12,7 @@ import me.eater.emo.emo.dto.repository.Links
 import me.eater.emo.emo.dto.repository.Modpack
 import me.eater.emo.emo.dto.repository.ModpackVersion
 import me.eater.emo.emo.dto.repository.Repository
+import me.eater.emo.utils.ProcessStartedEvent
 import me.eater.emo.utils.io
 import me.eater.emo.utils.parallel
 import java.io.File
@@ -114,7 +115,7 @@ class Instance {
         }
     }
 
-    suspend fun minecraftLogIn(username: String, password: String, save: Boolean = true): Account {
+    suspend fun accountLogIn(username: String, password: String, save: Boolean = true): Account {
         return GlobalScope.async {
             val authService = useSettings { settings ->
                 YggdrasilAuthenticationService(Proxy.NO_PROXY, settings.clientToken)
@@ -201,7 +202,28 @@ class Instance {
         saveModpackCollectionCache()
     }
 
-    suspend fun getAccount(uuid: String = useSettings(true) { it.getSelectedAccountUuid() }): Account {
+    suspend fun removeAccount(uuid: String) {
+        val (accountMap, clientToken) = useSettings(true) {
+            it.getAccount(uuid) to it.clientToken
+        }
+
+        val authService = YggdrasilAuthenticationService(Proxy.NO_PROXY, clientToken)
+            .createUserAuthentication(Agent.MINECRAFT)
+
+        authService.loadFromStorage(accountMap)
+        try {
+            authService.logOut()
+        } catch (_: Throwable) {
+            // Don't
+        }
+
+        useSettings { it.removeAccount(uuid) }
+    }
+
+    suspend fun getAccount(
+        uuid: String = useSettings(true) { it.getSelectedAccountUuid() },
+        requireLoggedIn: Boolean = true
+    ): Account {
         return GlobalScope.async {
             val (accountMap, clientToken) = useSettings(true) {
                 it.getAccount(uuid) to it.clientToken
@@ -213,7 +235,7 @@ class Instance {
             authService.loadFromStorage(accountMap)
             authService.logIn()
 
-            if (!authService.isLoggedIn) {
+            if (!authService.isLoggedIn && requireLoggedIn) {
                 throw Error("Not logged in")
             }
 
@@ -233,6 +255,12 @@ class Instance {
         return useSettings(true) { settings -> settings.getProfiles() }
     }
 
+    suspend fun runInstall(emoContext: EmoContext, stateStart: (ProcessStartedEvent<EmoContext>) -> Unit) {
+        val workflow = getInstallWorkflow(emoContext)
+        workflow.processStarted += stateStart
+        workflow.waitFor()
+    }
+
     fun getEmoContextForModpack(
         modpack: Modpack,
         modpackVersion: ModpackVersion,
@@ -246,7 +274,7 @@ class Instance {
             mods = modpackVersion.mods,
             target = target,
             installLocation = Paths.get(installLocation),
-            profile = EmoProfile(),
+            environment = EmoEnvironment(),
             modpack = modpack,
             modpackVersion = modpackVersion,
             name = name

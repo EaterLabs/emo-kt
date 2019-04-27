@@ -1,6 +1,9 @@
 package me.eater.emo.utils
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 
 class WorkflowBuilder<C> {
     private var processes: HashMap<String, Process<C>> = hashMapOf()
@@ -94,7 +97,6 @@ class Workflow<C>(
     }
 
     private suspend fun tryProcess() {
-
         val chain = steps[currentStep]
 
         if (chain === null) {
@@ -130,10 +132,8 @@ class Workflow<C>(
         tryProcess()
     }
 
-    fun waitFor() {
-        runBlocking {
-            executionJob?.await()
-        }
+    suspend fun waitFor() {
+        executionJob?.await()
     }
 }
 

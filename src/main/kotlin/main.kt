@@ -4,12 +4,9 @@ import com.beust.jcommander.JCommander
 import com.beust.jcommander.Parameter
 import com.beust.jcommander.ParameterException
 import com.beust.jcommander.Parameters
-import com.mojang.authlib.Agent
-import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService
 import com.uchuhimo.konf.Config
 import kotlinx.coroutines.runBlocking
 import me.eater.emo.emo.*
-import me.eater.emo.emo.dto.ClientLock
 import me.eater.emo.emo.dto.Profile
 import me.eater.emo.emo.dto.repository.Mod
 import me.eater.emo.emo.dto.repository.Modpack
@@ -25,7 +22,6 @@ import me.eater.emo.utils.Noop
 import me.eater.emo.utils.Workflow
 import me.eater.emo.utils.WorkflowBuilder
 import net.swiftzer.semver.SemVer
-import java.net.Proxy
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.system.exitProcess
@@ -39,7 +35,7 @@ class EmoContext(
     val forgeVersion: VersionSelector? = null,
     val installLocation: Path,
     var minecraftVersion: VersionSelector,
-    val profile: EmoProfile = EmoProfile(),
+    val environment: EmoEnvironment = EmoEnvironment(),
     val target: Target = Target.Client,
     val mods: List<Mod> = listOf(),
     val modpack: Modpack? = null,
@@ -65,7 +61,7 @@ class EmoContext(
     }
 }
 
-class EmoProfile {
+class EmoEnvironment {
     val osName: String = System.getProperty("os.name").toLowerCase().run {
         when {
             this == "linux" -> "linux"
@@ -227,7 +223,9 @@ fun getInstallWorkflow(ctx: EmoContext): Workflow<EmoContext> {
         step("forge.v1.fetch_libraries", "emo.fetch_mods")
         step("emo.fetch_mods", "emo.create_profile")
         step("emo.create_profile", { if (it.target == Target.Client) "emo.create_client_lock" else null })
-        step("emo.create_client_lock", { if (it.instance != null && it.modpack != null && it.modpackVersion != null) "emo.add_profile" else null })
+        step(
+            "emo.create_client_lock",
+            { if (it.instance != null && it.modpack != null && it.modpackVersion != null) "emo.add_profile" else null })
         step("emo.add_profile", null)
     }.build(ctx)
 }
@@ -244,7 +242,9 @@ fun runInstallJob(ctx: EmoContext) {
     }
 
     workflow.execute()
-    workflow.waitFor()
+    runBlocking {
+        workflow.waitFor()
+    }
 
     println("Completed.")
 }
@@ -301,7 +301,7 @@ class LoginCommand(
 
         runBlocking {
             val acc = try {
-                Instance().minecraftLogIn(username[0], pw as String)
+                Instance().accountLogIn(username[0], pw as String)
             } catch (error: Throwable) {
                 print(error.message)
                 exitProcess(1)
@@ -342,71 +342,13 @@ class StartCommand(
     var location: List<String> = arrayListOf()
 ) : Command {
     override fun execute() {
-        val config = Config { addSpec(Profile) }
-        config.from.toml.file(Paths.get(location[0].expandTilde(), "emo.toml").toFile())
-
-        if (config[Profile.target] == Target.Server) {
-            // TODO
+        val executor = runBlocking {
+            MinecraftExecutor(location[0].expandTilde(), Instance().getAccount())
         }
 
-        val clientLock: ClientLock = emoKlaxon()
-            .parse(Paths.get(location[0], ".emo/client.json").toFile())!!
-
-        val manifest = parseManifest(Paths.get(location[0].expandTilde(), ".emo/minecraft.json").toFile().readText())
-        val profile = EmoProfile()
-
-        val classpath: MutableList<String> =
-            manifest.getLibraries().filter { it.downloads.artifact !== null && profile.passesRules(it.rules) }
-                .map { "libraries/" + it.downloads.artifact!!.path }
-                .toMutableList()
-
-        classpath.addAll(clientLock.start?.extraLibraries?.map { "libraries/$it" } ?: listOf())
-        classpath.add("minecraft.jar")
-
-        val settings = Settings.load()
-
-        val service = YggdrasilAuthenticationService(Proxy.NO_PROXY, settings.clientToken)
-        val auth = service.createUserAuthentication(Agent.MINECRAFT)
-        auth.loadFromStorage(settings.getSelectedAccount()!!)
-        auth.logIn()
-
-        if (!auth.isLoggedIn) {
-            println("Failed to log in")
-            exitProcess(1)
-        }
-
-        settings.addAccount(auth.saveForStorage())
-        settings.save()
-
-        val vars = hashMapOf(
-            Pair("classpath", classpath.joinToString(if (profile.osName == "windows") ";" else ":")),
-            Pair("user_type", "mojang"),
-            Pair("auth_uuid", auth.selectedProfile.id.toString()),
-            Pair("auth_player_name", auth.selectedProfile.name),
-            Pair("auth_access_token", auth.authenticatedToken),
-            Pair("game_directory", location[0].expandTilde())
-        ) + clientLock.vars
-
-        val gameArgs = clientLock.start!!.gameArguments
-            .filter { profile.passesRules(it.rules) }
-            .flatMap { it.value }
-            .map { it.replace(Regex("\\$\\{([^\\}]+)\\}")) { vars[it.groupValues[1]] ?: "" } }
-
-        val jvmArgs = clientLock.start!!.jvmArguments
-            .filter { profile.passesRules(it.rules) }
-            .flatMap { it.value }
-            .map { it.replace(Regex("\\$\\{([^\\}]+)\\}")) { vars[it.groupValues[1]] ?: "" } }
-
-        val args = listOf("java") + jvmArgs + listOf(clientLock.start!!.mainClass) + gameArgs
-
-        val process = ProcessBuilder().apply {
-            command(args)
-            directory(Paths.get(location[0].expandTilde()).toFile())
-            redirectOutput(ProcessBuilder.Redirect.INHERIT)
-            redirectError(ProcessBuilder.Redirect.INHERIT)
-        }.start()
-
-        process.waitFor()
+        executor
+            .execute()
+            .waitFor()
     }
 }
 
