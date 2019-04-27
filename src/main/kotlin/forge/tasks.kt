@@ -12,7 +12,6 @@ import me.eater.emo.utils.Process
 import me.eater.emo.utils.io
 import me.eater.emo.utils.parallel
 import java.io.File
-import java.nio.file.CopyOption
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption

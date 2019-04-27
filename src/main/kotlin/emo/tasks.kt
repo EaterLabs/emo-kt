@@ -118,6 +118,18 @@ class CreateEmoClientLock : Process<EmoContext> {
     }
 }
 
+class AddProfile : Process<EmoContext> {
+    override fun getName() = "emo.add_profile"
+    override suspend fun execute(context: EmoContext) {
+        context.instance!!.addProfile(
+            context.modpack!!,
+            context.modpackVersion!!,
+            context.installLocation.toString(),
+            context.name ?: context.modpack.name
+        )
+    }
+}
+
 class FetchMods : Process<EmoContext> {
     override fun getName() = "emo.fetch_mods"
     override suspend fun execute(context: EmoContext) {

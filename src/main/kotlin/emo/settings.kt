@@ -3,19 +3,12 @@ package me.eater.emo.emo
 import com.beust.klaxon.Converter
 import com.beust.klaxon.JsonValue
 import com.beust.klaxon.Klaxon
-import com.github.kittinunf.fuel.coroutines.awaitString
-import com.github.kittinunf.fuel.httpGet
-import me.eater.emo.emo.dto.repository.Links
-import me.eater.emo.emo.dto.repository.Modpack
-import me.eater.emo.emo.dto.repository.Repository
-import me.eater.emo.utils.io
-import me.eater.emo.utils.parallel
-import java.io.File
+import me.eater.emo.emo.dto.repository.ModpackVersion
+import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
-import kotlin.collections.HashMap
 
 val DataLocation: Path = when (System.getProperty("os.name").toLowerCase()) {
     "linux" -> Paths.get(System.getProperty("user.home"), "/.local/share/emo")
@@ -43,9 +36,10 @@ var settingsKlaxon = Klaxon()
 
 data class Settings(
     val clientToken: String,
-    var selectedAccount: String? = null,
-    val accounts: HashMap<String, Map<String, Any>> = hashMapOf(),
-    val repositories: MutableList<RepositoryDef> = mutableListOf()
+    private var selectedAccount: String? = null,
+    private val accounts: HashMap<String, Map<String, Any>> = hashMapOf(),
+    private val profiles: MutableList<Profile> = mutableListOf(),
+    private val repositories: MutableList<RepositoryDef> = mutableListOf()
 ) {
     fun save() {
         Files.createDirectories(SettingsLocation.parent)
@@ -68,49 +62,25 @@ data class Settings(
         selectedAccount = uuid
     }
 
-    fun getSelectedAccount(): Map<String, Any>? {
+    fun getSelectedAccountUuid(): String {
         if (selectedAccount === null) {
-            if (getAccounts().isEmpty()) return null
+            if (getAccounts().isEmpty()) throw Error("No accounts configured")
             val acc = getAccounts().first()
             selectAccount(acc["uuid"] as String)
         }
 
-        return getAccount(selectedAccount!!)
+        return selectedAccount!!
+    }
+
+    fun getSelectedAccount(): Map<String, Any>? {
+        return getAccount(getSelectedAccountUuid())
     }
 
     fun getConfiguredRepositories(): List<RepositoryDef> = repositories
     fun addRepository(repositoryDef: RepositoryDef) = repositories.add(repositoryDef)
-    suspend fun updateRepositories() {
-        val repositoryCache: HashMap<Int, RepositoryCache> = hashMapOf()
-        val modpackCache: HashMap<String, ModpackCache> = hashMapOf()
-        val repos = Array<Repository?>(this.repositories.size) { null }
-
-        parallel(this.repositories.indices) {
-            val sourceRepo = this.repositories[it]
-            val repo = when (sourceRepo.type) {
-                "local" -> {
-                    io {
-                        val json = File(sourceRepo.url).readText()
-
-                        Repository.fromJson(json)
-                    }
-                }
-                "remote" -> {
-                    val json = sourceRepo.url.httpGet()
-                        .awaitString()
-
-                    Repository.fromJson(json)
-                }
-                else -> null
-            }
-
-            repos[it] = repo
-        }
-
-        repos.filterNotNull().forEachIndexed { index, repository ->
-            repositoryCache.set(index, RepositoryCache.fromRepository(repository))
-        }
-    }
+    fun addProfile(profile: Profile) = profiles.add(profile)
+    fun getProfiles(): List<Profile> = profiles
+    fun removeRepository(repositoryDef: RepositoryDef) = repositories.remove(repositoryDef)
 
     companion object {
         fun load(): Settings {
@@ -134,21 +104,33 @@ data class Settings(
 data class RepositoryDef(
     val type: String,
     val url: String
-)
-
-data class RepositoryCache(
-    val name: String,
-    val description: String = "",
-    val logo: String? = null,
-    val links: Links = Links()
 ) {
-    companion object {
-        fun fromRepository(repository: Repository): RepositoryCache =
-            RepositoryCache(repository.name, repository.description, repository.logo, repository.links)
+    override fun hashCode(): Int {
+        var result = type.hashCode()
+        result = 31 * result + url.hashCode()
+        return result
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as RepositoryDef
+
+        if (type != other.type) return false
+        if (url != other.url) return false
+
+        return true
+    }
+
+    val hash by lazy {
+        Base64.getEncoder().encode("$type:$url".toByteArray()).toString(Charset.defaultCharset())
     }
 }
 
-data class ModpackCache(
-    val repository: Int,
-    val modpack: Modpack
+data class Profile(
+    val location: String,
+    val name: String,
+    val modpackName: String,
+    val modpack: ModpackVersion
 )

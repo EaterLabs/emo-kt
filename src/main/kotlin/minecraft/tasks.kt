@@ -6,7 +6,6 @@ import com.github.kittinunf.fuel.core.requests.download
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.github.kittinunf.fuel.httpDownload
 import com.github.kittinunf.fuel.httpGet
-import kotlinx.coroutines.*
 import me.eater.emo.EmoContext
 import me.eater.emo.Target
 import me.eater.emo.minecraft.dto.asset_index.AssetIndex

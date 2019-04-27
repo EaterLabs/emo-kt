@@ -7,12 +7,13 @@ import com.beust.jcommander.Parameters
 import com.mojang.authlib.Agent
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService
 import com.uchuhimo.konf.Config
-import me.eater.emo.emo.CreateEmoClientLock
-import me.eater.emo.emo.CreateEmoProfile
-import me.eater.emo.emo.FetchMods
-import me.eater.emo.emo.Settings
+import kotlinx.coroutines.runBlocking
+import me.eater.emo.emo.*
 import me.eater.emo.emo.dto.ClientLock
 import me.eater.emo.emo.dto.Profile
+import me.eater.emo.emo.dto.repository.Mod
+import me.eater.emo.emo.dto.repository.Modpack
+import me.eater.emo.emo.dto.repository.ModpackVersion
 import me.eater.emo.forge.*
 import me.eater.emo.forge.dto.manifest.v1.Manifest
 import me.eater.emo.minecraft.*
@@ -23,7 +24,6 @@ import me.eater.emo.minecraft.dto.minecraft_versions.VersionsManifest
 import me.eater.emo.utils.Noop
 import me.eater.emo.utils.Workflow
 import me.eater.emo.utils.WorkflowBuilder
-import me.eater.emo.utils.slice
 import net.swiftzer.semver.SemVer
 import java.net.Proxy
 import java.nio.file.Path
@@ -35,15 +35,17 @@ enum class Target {
     Client
 }
 
-data class EmoMod (val url: String, val name: String)
-
 class EmoContext(
     val forgeVersion: VersionSelector? = null,
     val installLocation: Path,
     var minecraftVersion: VersionSelector,
     val profile: EmoProfile = EmoProfile(),
     val target: Target = Target.Client,
-    val mods: List<EmoMod> = listOf()
+    val mods: List<Mod> = listOf(),
+    val modpack: Modpack? = null,
+    val modpackVersion: ModpackVersion? = null,
+    val instance: Instance? = null,
+    val name: String? = null
 ) {
     var forgeManifest: Manifest? = null
     var assetIndex: AssetIndex? = null
@@ -80,7 +82,6 @@ class EmoProfile {
             else -> it
         }
     }
-
 
 
     fun passesOSCheck(check: OS): Boolean {
@@ -142,6 +143,15 @@ class VersionSelector(val selector: String) {
     fun isStatic(): Boolean {
         return selector != "latest" && selector != "latest-snapshot" && selector != "recommended"
     }
+
+    companion object {
+        fun fromStringOrNull(selector: String?) =
+            if (selector == null) {
+                null
+            } else {
+                VersionSelector(selector)
+            }
+    }
 }
 
 fun getInstallWorkflow(ctx: EmoContext): Workflow<EmoContext> {
@@ -168,6 +178,7 @@ fun getInstallWorkflow(ctx: EmoContext): Workflow<EmoContext> {
         bind(CreateEmoProfile())
         bind(CreateEmoClientLock())
         bind(FetchMods())
+        bind(AddProfile())
 
         // Misc
         bind(Noop())
@@ -213,10 +224,11 @@ fun getInstallWorkflow(ctx: EmoContext): Workflow<EmoContext> {
         }, name = "forge.select_installer")
         step("forge.v1.fetch_universal", "forge.v1.load_manifest")
         step("forge.v1.load_manifest", "forge.v1.fetch_libraries")
-        step("forge.v1.fetch_libraries", "emo.create_profile")
+        step("forge.v1.fetch_libraries", "emo.fetch_mods")
+        step("emo.fetch_mods", "emo.create_profile")
         step("emo.create_profile", { if (it.target == Target.Client) "emo.create_client_lock" else null })
-        step("emo.create_client_lock", "emo.fetch_mods")
-        step("emo.fetch_mods", null)
+        step("emo.create_client_lock", { if (it.instance != null && it.modpack != null && it.modpackVersion != null) "emo.add_profile" else null })
+        step("emo.add_profile", null)
     }.build(ctx)
 }
 
@@ -287,24 +299,16 @@ class LoginCommand(
             exitProcess(1)
         }
 
-        val settings = Settings.load()
-        val authService = YggdrasilAuthenticationService(Proxy.NO_PROXY, settings.clientToken)
-            .createUserAuthentication(Agent.MINECRAFT)
-            .apply {
-                setUsername(username[0])
-                setPassword(pw.toString())
+        runBlocking {
+            val acc = try {
+                Instance().minecraftLogIn(username[0], pw as String)
+            } catch (error: Throwable) {
+                print(error.message)
+                exitProcess(1)
             }
 
-        authService.logIn()
-
-        if (!authService.isLoggedIn) {
-            println("Failed to login")
-            exitProcess(1)
+            println("User ${acc.displayName} saved!")
         }
-        val stor = authService.saveForStorage()
-        settings.addAccount(stor)
-        settings.save()
-        println("User ${authService.selectedProfile.name} saved!")
     }
 }
 

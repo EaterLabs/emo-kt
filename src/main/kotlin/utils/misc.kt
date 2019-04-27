@@ -8,7 +8,7 @@ suspend fun <T>io(
     block: suspend CoroutineScope.() -> T
 ): T = GlobalScope.async(Dispatchers.IO, start, block).await()
 
-suspend fun <T> parallel(items: Iterable<T>, parallel: Int = 10, call: suspend (input: T) -> Unit) {
+suspend fun <T> parallel(items: Iterable<T>, parallel: Int = 10, call: suspend (T) -> Unit) {
     val channel = Channel<T>()
     val jobs = arrayListOf<Job>()
 

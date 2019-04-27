@@ -29,7 +29,7 @@ data class Modpack(
     val links: Links = Links(),
     val name: String,
     val description: String = "",
-    val versions: Map<String, Version>,
+    val versions: Map<String, ModpackVersion>,
     val authors: List<Author> = listOf()
 )
 
@@ -39,7 +39,7 @@ data class Author(
     val links: Links = Links()
 )
 
-data class Version(
+data class ModpackVersion(
     val version: String,
     val channel: String = "release",
     val mods: List<Mod>,
