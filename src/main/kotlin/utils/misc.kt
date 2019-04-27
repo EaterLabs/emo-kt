@@ -3,14 +3,12 @@ package me.eater.emo.utils
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 
-suspend fun io(
+suspend fun <T>io(
     start: CoroutineStart = CoroutineStart.DEFAULT,
-    block: suspend CoroutineScope.() -> Unit
-) {
-    GlobalScope.launch(Dispatchers.IO, start, block).join()
-}
+    block: suspend CoroutineScope.() -> T
+): T = GlobalScope.async(Dispatchers.IO, start, block).await()
 
-suspend fun <T> parallel(items: Iterable<T>, parallel: Int = 10, call: (input: T) -> Unit) {
+suspend fun <T> parallel(items: Iterable<T>, parallel: Int = 10, call: suspend (input: T) -> Unit) {
     val channel = Channel<T>()
     val jobs = arrayListOf<Job>()
 

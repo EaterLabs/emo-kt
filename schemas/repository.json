@@ -1,0 +1,190 @@
+{
+  "title": "JSON schema for emo's repository definition file",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "linksDefinition": {
+      "description": "Collection of links for this subject",
+      "type": "object",
+      "properties": {
+        "homepage": {
+          "description": "Link to homepage",
+          "type": "string"
+        },
+        "donate": {
+          "description": "Link to donation page",
+          "type": "string"
+        }
+      }
+    },
+    "modpackDefinition": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The id of the modpack should be in author/modpack-name format, make sure it's unique",
+          "pattern": "^\\w+\\/\\w+$",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of modpack",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description of modpack",
+          "type": "string"
+        },
+        "logo": {
+          "description": "URL to logo of this modpack",
+          "type": "string"
+        },
+        "versions": {
+          "description": "All available versions of this modpack",
+          "type": "object",
+          "minProperties": 1,
+          "patternProperties": {
+            "^\\d+\\.\\d+\\.\\d+$": {
+              "$ref": "#/definitions/modpackVersionDefinition"
+            }
+          },
+          "additionalProperties": false
+        },
+        "links": {
+          "description": "Links of modpack",
+          "$ref": "#/definitions/linksDefinition"
+        },
+        "authors": {
+          "type": "array",
+          "items": {
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "display name of author"
+              },
+              "email": {
+                "type": "string",
+                "description": "Email address on which author can be contacted"
+              },
+              "links": {
+                "description": "Links of author",
+                "$ref": "#/definitions/linksDefinition"
+              }
+            },
+            "required": [
+              "name"
+            ]
+          }
+        }
+      },
+      "required": [
+        "name",
+        "id",
+        "versions"
+      ]
+    },
+    "modpackVersionDefinition": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "description": "In which channel this version should be release, supported channels are: release, beta and alpha. default is release",
+          "type": "string",
+          "default": "release",
+          "enum": [
+            "release",
+            "beta",
+            "alpha"
+          ]
+        },
+        "version": {
+          "description": "SemVer version of this modpack",
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "mods": {
+          "type": "array",
+          "description": "Mods included in this modpack",
+          "items": [
+            {
+              "$ref": "#/definitions/modDefinition"
+            }
+          ]
+        },
+        "message": {
+          "description": "Message about this version, useful for e.g. changelog",
+          "type": "string"
+        },
+        "minecraft": {
+          "description": "Which version of Minecraft should be used",
+          "type": "string"
+        },
+        "forge": {
+          "description": "Which version of forge should be used, null to disable forge",
+          "default": null,
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "required": [
+        "version",
+        "mods",
+        "minecraft"
+      ]
+    },
+    "modDefinition": {
+      "properties": {
+        "name": {
+          "description": "Name of mod, should be filename safe and without .jar",
+          "pattern": "^[a-zA-Z0-9\\._-]+$",
+          "type": "string"
+        },
+        "url": {
+          "description": "URL to mod, currently only http or https are supported",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "url"
+      ]
+    },
+    "repositoryDefinition": {
+      "properties": {
+        "name": {
+          "description": "Display name of this repository",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description about this repository",
+          "type": "string"
+        },
+        "logo": {
+          "description": "URL to logo of this repository",
+          "type": "string"
+        },
+        "links": {
+          "description": "Links of this repository",
+          "$ref": "#/definitions/linksDefinition"
+        },
+        "modpacks": {
+          "type": "object",
+          "description": "All available modpacks in this repository",
+          "patternProperties": {
+            "^\\w+\\/\\w+$": {
+              "$ref": "#/definitions/modpackDefinition"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "name",
+        "modpacks"
+      ]
+    }
+  },
+  "$ref": "#/definitions/repositoryDefinition"
+}
