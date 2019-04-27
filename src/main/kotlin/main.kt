@@ -12,7 +12,6 @@ import me.eater.emo.emo.dto.repository.Mod
 import me.eater.emo.emo.dto.repository.Modpack
 import me.eater.emo.emo.dto.repository.ModpackVersion
 import me.eater.emo.forge.*
-import me.eater.emo.forge.dto.manifest.v1.Manifest
 import me.eater.emo.minecraft.*
 import me.eater.emo.minecraft.dto.asset_index.AssetIndex
 import me.eater.emo.minecraft.dto.manifest.*
@@ -22,6 +21,7 @@ import me.eater.emo.utils.Noop
 import me.eater.emo.utils.Workflow
 import me.eater.emo.utils.WorkflowBuilder
 import net.swiftzer.semver.SemVer
+import java.io.File
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.system.exitProcess
@@ -43,11 +43,12 @@ class EmoContext(
     val instance: Instance? = null,
     val name: String? = null
 ) {
-    var forgeManifest: Manifest? = null
+    var forgeManifest: StartManifest? = null
     var assetIndex: AssetIndex? = null
     var selectedMinecraftVersion: Version? = null
     var selectedForgeVersion: String? = null
     var minecraftManifest: IManifest? = null
+    var forgeInstaller: File? = null
     val extractQueue: ArrayList<Pair<Artifact, Extract>> = arrayListOf()
 
     private var versionsManifest: VersionsManifest? = null
@@ -169,6 +170,8 @@ fun getInstallWorkflow(ctx: EmoContext): Workflow<EmoContext> {
         bind(FetchInstaller())
         bind(FetchUniversal())
         bind(FetchForgeLibraries())
+        bind(RunInstaller())
+        bind(ForgeExtractManifest())
 
         // Emo
         bind(CreateEmoProfile())
@@ -221,6 +224,11 @@ fun getInstallWorkflow(ctx: EmoContext): Workflow<EmoContext> {
         step("forge.v1.fetch_universal", "forge.v1.load_manifest")
         step("forge.v1.load_manifest", "forge.v1.fetch_libraries")
         step("forge.v1.fetch_libraries", "emo.fetch_mods")
+
+        step("forge.v2.fetch_installer", "forge.v2.run_installer")
+        step("forge.v2.run_installer", "forge.v2.extract_manifest")
+        step("forge.v2.extract_manifest", "emo.fetch_mods")
+
         step("emo.fetch_mods", "emo.create_profile")
         step("emo.create_profile", { if (it.target == Target.Client) "emo.create_client_lock" else null })
         step(

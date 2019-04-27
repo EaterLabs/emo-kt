@@ -38,10 +38,10 @@ var settingsKlaxon = Klaxon()
 
 data class Settings(
     val clientToken: String,
-    private var selectedAccount: String? = null,
-    private val accounts: HashMap<String, Map<String, Any>> = hashMapOf(),
-    private val profiles: MutableList<Profile> = mutableListOf(),
-    private val repositories: MutableList<RepositoryDef> = mutableListOf()
+    var selectedAccount: String? = null,
+    val accounts: HashMap<String, Map<String, Any>> = hashMapOf(),
+    val profiles: MutableList<Profile> = mutableListOf(),
+    val repositories: MutableList<RepositoryDef> = mutableListOf()
 ) {
     fun save() {
         Files.createDirectories(SettingsLocation.parent)
@@ -85,6 +85,7 @@ data class Settings(
     fun getConfiguredRepositories(): List<RepositoryDef> = repositories
     fun addRepository(repositoryDef: RepositoryDef) = repositories.add(repositoryDef)
     fun addProfile(profile: Profile) = profiles.add(profile)
+    @JvmName("getRealProfiles")
     fun getProfiles(): List<Profile> = profiles
     fun removeRepository(repositoryDef: RepositoryDef) = repositories.remove(repositoryDef)
 
@@ -94,7 +95,8 @@ data class Settings(
                 var settings: Settings? = null
                 try {
                     settings = settingsKlaxon.parse(SettingsLocation.toFile().readText())
-                } catch (_: Exception) {
+                } catch (e: Exception) {
+                    println(e)
                 }
 
                 if (settings !== null) return settings

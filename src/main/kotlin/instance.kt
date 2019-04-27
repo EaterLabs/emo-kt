@@ -40,7 +40,7 @@ class Instance {
                 lastSettingsMtime = lastModified
             }
             val result = block(settings)
-            if (readOnly) {
+            if (!readOnly) {
                 settings.save()
                 lastSettingsMtime = SettingsLocation.toFile().lastModified()
             }
@@ -292,7 +292,7 @@ data class Account(
     companion object {
         fun fromMap(map: Map<String, Any>): Account {
             return Account(
-                map["uuid"] as String,
+                map["uuid"].toString(),
                 map["displayName"] as String,
                 map["username"] as String,
                 map["accessToken"] as String,

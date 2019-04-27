@@ -50,11 +50,6 @@ data class Manifest(
     }
 }
 
-data class Arguments(
-    val game: List<Argument>,
-    val jvm: List<Argument>
-)
-
 data class AssetIndex(
     val id: String,
     val sha1: String,

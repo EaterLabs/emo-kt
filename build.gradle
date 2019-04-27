@@ -61,3 +61,7 @@ jar {
         )
     }
 }
+
+shadowJar {
+    relocate 'com.google', 'com.kookel'
+}

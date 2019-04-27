@@ -82,7 +82,7 @@ class FetchForgeLibraries: Process<EmoContext> {
     override fun getName() = "forge.v1.fetch_libraries"
 
     override suspend fun execute(context: EmoContext) {
-        parallel(context.forgeManifest!!.libraries) {
+        parallel((context.forgeManifest!! as Manifest).libraries) {
             if (it.clientreq === null && it.serverreq === null) {
                 return@parallel
             }
@@ -105,27 +105,6 @@ class FetchForgeLibraries: Process<EmoContext> {
             val newPath = Paths.get(context.installLocation.toString(), "libraries/net/minecraftforge/forge", "${context.selectedMinecraftVersion!!.id}-${context.selectedForgeVersion!!}", "forge-${context.selectedMinecraftVersion!!.id}-${context.selectedForgeVersion!!}.jar")
             Files.createDirectories(newPath.parent)
             Files.move(Paths.get(context.installLocation.toString(), "forge.jar"), newPath, StandardCopyOption.REPLACE_EXISTING)
-        }
-    }
-}
-
-class FetchInstaller : Process<EmoContext> {
-    override fun getName() = "forge.v2.fetch_installer"
-
-    override suspend fun execute(context: EmoContext) {
-        val versionTuple = "${context.selectedMinecraftVersion!!.id}-${context.selectedForgeVersion!!}"
-        val artifactUrl =
-            "https://files.minecraftforge.net/maven/net/minecraftforge/forge/$versionTuple/forge-$versionTuple-installer.jar"
-        io {
-            val file = File.createTempFile("emo.", ".jar")
-
-            artifactUrl
-                .httpDownload()
-                .fileDestination { _, _ -> file }
-                .response { _ -> }
-                .join()
-
-            println(file.absolutePath)
         }
     }
 }

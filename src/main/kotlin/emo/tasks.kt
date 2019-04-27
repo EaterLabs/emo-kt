@@ -68,24 +68,28 @@ class CreateEmoClientLock : Process<EmoContext> {
             Pair("launcher_version", "1.0")
         )
 
-        val ver = context.forgeManifest
+        val forgeManifest = context.forgeManifest
 
         val (game, jvm) = when {
-            ver == null -> {
+            forgeManifest == null -> {
                 Pair(context.minecraftManifest!!.getGameArguments(),
                     context.minecraftManifest!!.getJVMArguments().let { if (it.isEmpty()) DEFAULT_JVM_ARGUMENTS else it })
             }
             SemVer.parse(context.selectedMinecraftVersion!!.id) >= SemVer(1, 13, 0) -> {
                 // Prepend Forge arguments
-                Pair(listOf(), listOf())
+                Pair(
+                    listOf(
+                        *forgeManifest.getGameArguments().toTypedArray(),
+                        *context.minecraftManifest!!.getGameArguments().toTypedArray()
+                    ),
+                    listOf(
+                        *forgeManifest.getJVMArguments().toTypedArray(),
+                        *context.minecraftManifest!!.getJVMArguments().let { if (it.isEmpty()) DEFAULT_JVM_ARGUMENTS else it }.toTypedArray()
+                    )
+                )
             }
             else -> Pair(
-                listOf(
-                    Argument(
-                        listOf(),
-                        context.forgeManifest!!.minecraftArguments.split(Regex("\\s+"))
-                    )
-                ),
+                context.forgeManifest!!.getGameArguments(),
                 listOf(
                     Argument(
                         listOf(),
@@ -98,8 +102,8 @@ class CreateEmoClientLock : Process<EmoContext> {
         val libs: MutableList<String> = mutableListOf()
 
         if (context.forgeManifest !== null) {
-            for (lib in context.forgeManifest!!.libraries) {
-                libs.add(lib.getPath())
+            for (lib in context.forgeManifest!!.getLibraries()) {
+                libs.add(lib.getPath() ?: continue)
             }
         }
 
