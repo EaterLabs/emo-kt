@@ -4,7 +4,6 @@ import com.beust.klaxon.Converter
 import com.beust.klaxon.JsonValue
 import com.beust.klaxon.Klaxon
 import me.eater.emo.Account
-import me.eater.emo.Instance
 import me.eater.emo.emo.dto.repository.ModpackVersion
 import java.nio.charset.Charset
 import java.nio.file.Files

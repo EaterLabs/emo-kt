@@ -4,12 +4,12 @@ import com.beust.klaxon.Klaxon
 
 private val klaxon = Klaxon()
 
-data class Repository(
+open class Repository(
     val name: String,
     val description: String = "",
     val logo: String? = null,
     val links: Links = Links(),
-    val modpacks: Map<String, Modpack> = mapOf()
+    open val modpacks: Map<String, Modpack> = mapOf()
 ) {
     public fun toJson() = klaxon.toJsonString(this)
 
@@ -17,6 +17,14 @@ data class Repository(
         public fun fromJson(json: String) = klaxon.parse<Repository>(json)
     }
 }
+
+class MutableRepository(
+    name: String,
+    description: String = "",
+    logo: String? = null,
+    links: Links = Links(),
+    override val modpacks: MutableMap<String, Modpack> = mutableMapOf()
+) : Repository(name, description, logo, links)
 
 data class Links(
     val homepage: String? = null,

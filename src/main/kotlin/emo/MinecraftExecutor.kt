@@ -13,6 +13,9 @@ import java.nio.file.Paths
 class MinecraftExecutor(val profileLocation: String, val account: Account) {
     var process: Process? = null
 
+    /**
+     * Start minecraft for given [profileLocation] and [account], returns running [Process]
+     */
     fun execute(): Process {
         val config = Config { addSpec(Profile) }
         config.from.toml.file(Paths.get(profileLocation, "emo.toml").toFile())
@@ -24,7 +27,12 @@ class MinecraftExecutor(val profileLocation: String, val account: Account) {
         val clientLock: ClientLock = emoKlaxon()
             .parse(Paths.get(profileLocation, ".emo/client.json").toFile())!!
 
-        val manifest = parseManifest(Paths.get(profileLocation, ".emo/minecraft.json").toFile().readText())
+        val manifest = parseManifest(
+            Paths.get(
+                profileLocation,
+                ".emo/minecraft.json"
+            ).toFile().readText()
+        )
         val profile = EmoEnvironment()
 
         val classpath: MutableList<String> =

@@ -8,147 +8,18 @@ import com.uchuhimo.konf.Config
 import kotlinx.coroutines.runBlocking
 import me.eater.emo.emo.*
 import me.eater.emo.emo.dto.Profile
-import me.eater.emo.emo.dto.repository.Mod
-import me.eater.emo.emo.dto.repository.Modpack
-import me.eater.emo.emo.dto.repository.ModpackVersion
 import me.eater.emo.forge.*
 import me.eater.emo.minecraft.*
-import me.eater.emo.minecraft.dto.asset_index.AssetIndex
-import me.eater.emo.minecraft.dto.manifest.*
-import me.eater.emo.minecraft.dto.minecraft_versions.Version
-import me.eater.emo.minecraft.dto.minecraft_versions.VersionsManifest
 import me.eater.emo.utils.Noop
 import me.eater.emo.utils.Workflow
 import me.eater.emo.utils.WorkflowBuilder
 import net.swiftzer.semver.SemVer
-import java.io.File
-import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.system.exitProcess
 
 enum class Target {
     Server,
     Client
-}
-
-class EmoContext(
-    val forgeVersion: VersionSelector? = null,
-    val installLocation: Path,
-    var minecraftVersion: VersionSelector,
-    val environment: EmoEnvironment = EmoEnvironment(),
-    val target: Target = Target.Client,
-    val mods: List<Mod> = listOf(),
-    val modpack: Modpack? = null,
-    val modpackVersion: ModpackVersion? = null,
-    val instance: Instance? = null,
-    val name: String? = null
-) {
-    var forgeManifest: StartManifest? = null
-    var assetIndex: AssetIndex? = null
-    var selectedMinecraftVersion: Version? = null
-    var selectedForgeVersion: String? = null
-    var minecraftManifest: IManifest? = null
-    var forgeInstaller: File? = null
-    val extractQueue: ArrayList<Pair<Artifact, Extract>> = arrayListOf()
-
-    private var versionsManifest: VersionsManifest? = null
-
-    fun getVersionsManifest(): VersionsManifest {
-        return versionsManifest!!
-    }
-
-    fun setVersionsManifest(manifest: VersionsManifest) {
-        versionsManifest = manifest
-    }
-}
-
-class EmoEnvironment {
-    val osName: String = System.getProperty("os.name").toLowerCase().run {
-        when {
-            this == "linux" -> "linux"
-            this.contains("mac", true) -> "osx"
-            this.contains("windows", true) -> "windows"
-            else -> "other"
-        }
-    }
-    private val osVersion: String = System.getProperty("os.version")
-    private val osArch: String = System.getProperty("os.arch").let {
-        when (it) {
-            "amd64" -> "x86"
-            "x86_64" -> "x86"
-            else -> it
-        }
-    }
-
-
-    fun passesOSCheck(check: OS): Boolean {
-        if (check.arch !== null && check.arch != osArch) {
-            return false
-        }
-
-        if (check.version !== null && !check.version.matches(osVersion)) {
-            return false
-        }
-
-        if (check.name !== null && check.name != osName) {
-            return false
-        }
-
-        return true
-    }
-
-    fun passesRule(rule: Rule): Boolean {
-        val result: Boolean = rule.run result@{
-            if (os !== null && !passesOSCheck(os)) {
-                return@result false
-            }
-
-            if (features !== null) {
-                return@result false
-            }
-
-            return@result true
-        }
-
-        if (rule.action == Action.Disallow) {
-            return !result
-        }
-
-        return result
-    }
-
-    fun passesRules(rules: Iterable<Rule>): Boolean {
-        for (rule in rules) {
-            if (!passesRule(rule)) {
-                return false
-            }
-        }
-
-        return true
-    }
-
-    fun selectNative(library: Library): Artifact? {
-        if (library.natives.containsKey(osName)) {
-            return library.downloads.classifiers[library.natives[osName]]
-        }
-
-        return null
-    }
-}
-
-class VersionSelector(val selector: String) {
-    fun isStatic(): Boolean {
-        return selector != "latest" && selector != "latest-snapshot" && selector != "recommended"
-    }
-
-    companion object {
-        fun fromStringOrNull(selector: String?) =
-            if (selector == null) {
-                null
-            } else {
-                VersionSelector(selector)
-            }
-    }
 }
 
 fun getInstallWorkflow(ctx: EmoContext): Workflow<EmoContext> {
@@ -309,7 +180,7 @@ class LoginCommand(
 
         runBlocking {
             val acc = try {
-                Instance().accountLogIn(username[0], pw as String)
+                EmoInstance().accountLogIn(username[0], pw as String)
             } catch (error: Throwable) {
                 print(error.message)
                 exitProcess(1)
@@ -351,7 +222,7 @@ class StartCommand(
 ) : Command {
     override fun execute() {
         val executor = runBlocking {
-            MinecraftExecutor(location[0].expandTilde(), Instance().getAccount())
+            MinecraftExecutor(location[0].expandTilde(), EmoInstance().getAccountViaAuthentication())
         }
 
         executor

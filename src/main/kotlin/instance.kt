@@ -4,14 +4,12 @@ import com.beust.klaxon.Klaxon
 import com.github.kittinunf.fuel.coroutines.awaitString
 import com.github.kittinunf.fuel.httpGet
 import com.mojang.authlib.Agent
+import com.mojang.authlib.exceptions.AuthenticationException
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import me.eater.emo.emo.*
-import me.eater.emo.emo.dto.repository.Links
-import me.eater.emo.emo.dto.repository.Modpack
-import me.eater.emo.emo.dto.repository.ModpackVersion
-import me.eater.emo.emo.dto.repository.Repository
+import me.eater.emo.emo.dto.repository.*
 import me.eater.emo.utils.ProcessStartedEvent
 import me.eater.emo.utils.io
 import me.eater.emo.utils.parallel
@@ -24,7 +22,10 @@ import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
-class Instance {
+/**
+ * EmoInstance
+ */
+class EmoInstance {
     private var modpackCollectionCache: ModpackCollectionCache = ModpackCollectionCache()
     private val settingsLock = ReentrantLock()
     private var lastSettingsMtime: Long = 0
@@ -49,10 +50,16 @@ class Instance {
         }
     }
 
+    /**
+     * Get location where all configuration and other data is stored for user
+     */
     fun getDataDir(): String {
         return DataLocation.toString()
     }
 
+    /**
+     * Fetches all remote and local repositories and indexes those, save the new cache with [saveModpackCollectionCache]
+     */
     suspend fun updateRepositories() {
         val repositories = useSettings { it.getConfiguredRepositories() }
         val repositoryCache: HashMap<String, RepositoryCache> = hashMapOf()
@@ -94,9 +101,15 @@ class Instance {
         saveModpackCollectionCache()
     }
 
-    fun getModpackCollectionCachePath(): Path =
+    /**
+     * Get path where cache for modpack collection is save
+     */
+    private fun getModpackCollectionCachePath(): Path =
         Paths.get(getDataDir(), "modpack-cache.json").also { Files.createDirectories(it.parent) }
 
+    /**
+     * Save current modpack collection, make sure either [updateRepositories] or [loadModpackCollectionCache] is called before, otherwise you will save an empty cache
+     */
     suspend fun saveModpackCollectionCache() {
         val cacheFile = getModpackCollectionCachePath().toFile()
         io {
@@ -104,6 +117,9 @@ class Instance {
         }
     }
 
+    /**
+     * Load the current modpack collection cache from disk
+     */
     suspend fun loadModpackCollectionCache() {
         val cacheFile = getModpackCollectionCachePath().toFile()
         if (!cacheFile.exists()) {
@@ -115,6 +131,12 @@ class Instance {
         }
     }
 
+
+    /**
+     * Try to authenticate with the Minecraft servers with given [username] and [password].
+     * Throws on login failure, set [save] to false to not save this account in the settings.
+     * (e.g. if you only want to check if these are correct credentials)
+     */
     suspend fun accountLogIn(username: String, password: String, save: Boolean = true): Account {
         return GlobalScope.async {
             val authService = useSettings { settings ->
@@ -145,35 +167,61 @@ class Instance {
         }.await()
     }
 
+    /**
+     * Get a list of configured accounts saved in settings
+     */
     fun getAccounts(): List<Account> {
         return useSettings {
             it.getAccounts().map { Account.fromMap(it) }
         }
     }
 
+    /**
+     * Get repository by id saved in [ModpackCache.repository]
+     */
+    fun getRepository(id: String): RepositoryCache? = this.modpackCollectionCache.repositoryCache.get(id)
+
+    /**
+     * Get a list of configured repositories from settings
+     */
     fun getRepositories() = useSettings(true) { it.getConfiguredRepositories() }
+
+    /**
+     * Remove a repository
+     */
     fun removeRepository(repositoryDef: RepositoryDef) {
         useSettings { settings ->
             settings.removeRepository(repositoryDef)
         }
     }
 
-    fun getModpacks(): List<ModpackCache> = modpackCollectionCache.modpackCache.values.toList()
+    /**
+     * Get all modpacks currently known to cache, indexed by id. id is enforced `[user-handle]/[modpack-id]`
+     */
+    fun getModpacks(): Map<String, ModpackCache> = modpackCollectionCache.modpackCache
 
-    suspend fun getLocalRepo(): Repository {
+    /**
+     * Get modpack by handle
+     */
+    fun getModpack(id: String): ModpackCache? = modpackCollectionCache.modpackCache.get(id)
+
+    /**
+     * Get the local modpack repo, which is used for locally imported or created modpacks
+     */
+    suspend fun getLocalRepo(): MutableRepository {
         return io {
             val repoPath = Paths.get(localRepo.url)
             val repoFile = repoPath.toFile()
 
             val repo = if (!repoFile.exists()) {
                 Files.createDirectories(repoPath.parent)
-                Repository(
+                MutableRepository(
                     "Your local repo"
                 ).also {
                     repoFile.writeText(klaxon.toJsonString(it))
                 }
             } else {
-                klaxon.parse(repoFile) ?: Repository(
+                klaxon.parse<MutableRepository>(repoFile) ?: MutableRepository(
                     "Your local repo"
                 ).also {
                     repoFile.writeText(klaxon.toJsonString(it))
@@ -184,6 +232,18 @@ class Instance {
         }
     }
 
+    suspend fun saveLocalRepo(localRepository: MutableRepository) {
+        io {
+            val repoPath = Paths.get(localRepo.url)
+            val repoFile = repoPath.toFile()
+            Files.createDirectories(repoPath.parent)
+            repoFile.writeText(klaxon.toJsonString(localRepository))
+        }
+    }
+
+    /**
+     * Add local [modpack] to local repository, will inject [modpack] into cache and save that immediately afterwards
+     */
     suspend fun addLocalModpack(modpack: Modpack) {
         val repo = getLocalRepo()
 
@@ -194,6 +254,9 @@ class Instance {
             }
         }
 
+        repo.modpacks.set(modpack.id, modpack)
+        saveLocalRepo(repo)
+
         if (!modpackCollectionCache.repositoryCache.containsKey(localRepo.hash)) {
             modpackCollectionCache.repositoryCache.set(localRepo.hash, RepositoryCache.fromRepository(localRepo, repo))
         }
@@ -202,6 +265,9 @@ class Instance {
         saveModpackCollectionCache()
     }
 
+    /**
+     * Remove account from settings by [uuid]
+     */
     suspend fun removeAccount(uuid: String) {
         val (accountMap, clientToken) = useSettings(true) {
             it.getAccount(uuid) to it.clientToken
@@ -220,7 +286,12 @@ class Instance {
         useSettings { it.removeAccount(uuid) }
     }
 
-    suspend fun getAccount(
+    /**
+     * Get an account by [uuid] if not given, selected account is used.
+     * Will try to reauthenticate with the mojang account service
+     * if [requireLoggedIn] is true or not given, will throw on failed re-authentication
+     */
+    suspend fun getAccountViaAuthentication(
         uuid: String = useSettings(true) { it.getSelectedAccountUuid() },
         requireLoggedIn: Boolean = true
     ): Account {
@@ -233,7 +304,13 @@ class Instance {
                 .createUserAuthentication(Agent.MINECRAFT)
 
             authService.loadFromStorage(accountMap)
-            authService.logIn()
+            try {
+                authService.logIn()
+            } catch (e: AuthenticationException) {
+                if (requireLoggedIn) {
+                    throw e
+                }
+            }
 
             if (!authService.isLoggedIn && requireLoggedIn) {
                 throw Error("Not logged in")
@@ -246,21 +323,36 @@ class Instance {
         }.await()
     }
 
+    /**
+     * Add profile with given [modpack] and [modpackVersion] on [location] with [name] to settings.
+     * This function is used by the install workflow
+     */
     fun addProfile(modpack: Modpack, modpackVersion: ModpackVersion, location: String, name: String) {
         val profile = Profile(location, name, modpack = modpackVersion, modpackName = modpack.name)
         useSettings { settings -> settings.addProfile(profile) }
     }
 
+    /**
+     * Get list of profiles saved in settings
+     */
     fun getProfiles(): List<Profile> {
         return useSettings(true) { settings -> settings.getProfiles() }
     }
 
+    /**
+     * Run an install workflow for given [emoContext], [stateStart] will be called everytime the install workflow changes
+     * to a state. function will return after install, or throw at failure
+     */
     suspend fun runInstall(emoContext: EmoContext, stateStart: (ProcessStartedEvent<EmoContext>) -> Unit) {
         val workflow = getInstallWorkflow(emoContext)
         workflow.processStarted += stateStart
         workflow.waitFor()
     }
 
+    /**
+     * Get an [EmoContext] object for install configuration consisting of [modpack], [modpackVersion], [installLocation],
+     * [target], and [name], if no [name] is given, name of modpack will be used
+     */
     fun getEmoContextForModpack(
         modpack: Modpack,
         modpackVersion: ModpackVersion,
@@ -280,13 +372,41 @@ class Instance {
             name = name
         )
     }
+
+    /**
+     * Get a [MinecraftExecutor] for given [location] and [account]
+     */
+    fun getMinecraftExecutor(location: String, account: Account) = MinecraftExecutor(location, account)
+
+    /**
+     * Get a [MinecraftExecutor] for given [profile] and [account]
+     */
+    fun getMinecraftExecutor(profile: Profile, account: Account) = getMinecraftExecutor(profile.location, account)
 }
 
+/**
+ * Class to hold account data received from Mojang via Authentication
+ */
 data class Account(
+    /**
+     * UUID of account known by Mojang account services
+     */
     val uuid: String,
+    /**
+     * Display name of account, used in e.g. Minecraft
+     */
     val displayName: String,
+    /**
+     * Username that is used for login [is with non-legacy accounts an email-address]
+     */
     val username: String,
+    /**
+     * Access token that is used to re-authenticate with Mojang, in game as well in the client
+     */
     val accessToken: String,
+    /**
+     * user id of game profile used. [Has zero importance to us.]
+     */
     val userid: String
 ) {
     companion object {
