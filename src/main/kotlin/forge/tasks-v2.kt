@@ -10,12 +10,14 @@ import me.eater.emo.utils.Process
 import me.eater.emo.utils.io
 import java.io.File
 import java.net.URLClassLoader
+import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.function.Predicate
 import java.util.jar.JarFile
 
 class FetchInstaller : Process<EmoContext> {
     override fun getName() = "forge.v2.fetch_installer"
+    override fun getDescription() = "Fetching Forge installer"
 
     override suspend fun execute(context: EmoContext) {
         val versionTuple = "${context.selectedMinecraftVersion!!.id}-${context.selectedForgeVersion!!}"
@@ -37,6 +39,7 @@ class FetchInstaller : Process<EmoContext> {
 
 class RunInstaller : Process<EmoContext> {
     override fun getName() = "forge.v2.run_installer"
+    override fun getDescription() = "Running Forge installer"
 
     override suspend fun execute(context: EmoContext) {
         val installer = context.forgeInstaller!!
@@ -95,11 +98,21 @@ class RunInstaller : Process<EmoContext> {
 
 class ForgeExtractManifest : Process<EmoContext> {
     override fun getName() = "forge.v2.extract_manifest"
+    override fun getDescription() = "Extracting Forge install manifest"
 
     override suspend fun execute(context: EmoContext) {
         val jar = JarFile(context.forgeInstaller!!)
         val json = String(jar.getInputStream(jar.getJarEntry("version.json")).readBytes())
         context.forgeManifest = emoKlaxon().parse<me.eater.emo.forge.dto.manifest.v2.Manifest>(json)
         jar.close()
+    }
+}
+
+class ForgeCleanInstaller : Process<EmoContext> {
+    override fun getName() = "forge.v2.clean_installer"
+    override fun getDescription() = "Removing Forge installer"
+
+    override suspend fun execute(context: EmoContext) {
+        context.forgeInstaller!!.delete()
     }
 }

@@ -3,6 +3,7 @@ package me.eater.emo.minecraft
 import com.beust.klaxon.Klaxon
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.requests.download
+import com.github.kittinunf.fuel.coroutines.awaitString
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.github.kittinunf.fuel.httpDownload
 import com.github.kittinunf.fuel.httpGet
@@ -26,17 +27,19 @@ const val MINECRAFT_ASSESTS_HOST_URL = "https://resources.download.minecraft.net
 
 class FetchVersionsManifest : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_versions"
+    override fun getDescription() = "Fetching version manifest from Mojang"
 
     override suspend fun execute(context: EmoContext) {
-        val (_, _, result) = Fuel.get(MINECRAFT_VERSIONS_MANIFEST)
-            .awaitStringResponseResult()
+        val result = Fuel.get(MINECRAFT_VERSIONS_MANIFEST)
+            .awaitString()
 
-        context.setVersionsManifest(Klaxon().parse<VersionsManifest>(result.get())!!)
+        context.setVersionsManifest(Klaxon().parse<VersionsManifest>(result)!!)
     }
 }
 
 class SelectMinecraftVersion : Process<EmoContext> {
     override fun getName() = "minecraft.select_version"
+    override fun getDescription() = "Selecting Minecraft version to install"
 
     override suspend fun execute(context: EmoContext) {
         val selected: String = when {
@@ -60,25 +63,27 @@ class SelectMinecraftVersion : Process<EmoContext> {
 
 class FetchMinecraftManifest : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_manifest"
+    override fun getDescription() = "Fetching Minecraft install manifest"
 
     override suspend fun execute(context: EmoContext) {
 
-        val (_, _, result) = Fuel.get(context.selectedMinecraftVersion!!.url)
-            .awaitStringResponseResult()
+        val result = Fuel.get(context.selectedMinecraftVersion!!.url)
+            .awaitString()
 
-        val manifest = parseManifest(result.get())
+        val manifest = parseManifest(result)
         context.minecraftManifest = manifest
 
         io {
             val path = Paths.get(context.installLocation.toString(), ".emo/minecraft.json")
             Files.createDirectories(path.parent)
-            path.toFile().writeText(result.get())
+            path.toFile().writeText(result)
         }
     }
 }
 
 class FetchMinecraftLibraries : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_libraries"
+    override fun getDescription() = "Fetching libraries for Minecraft"
 
     override suspend fun execute(context: EmoContext) {
         parallel(context.minecraftManifest!!.getLibraries().filter { context.environment.passesRules(it.rules) }) {
@@ -113,6 +118,7 @@ class FetchMinecraftLibraries : Process<EmoContext> {
 
 class ExtractNatives : Process<EmoContext> {
     override fun getName() = "minecraft.extract_natives"
+    override fun getDescription() = "Extracting Native libraries for Minecraft"
 
     override suspend fun execute(context: EmoContext) {
         io {
@@ -151,6 +157,7 @@ class ExtractNatives : Process<EmoContext> {
 
 class FetchMinecraftAssetIndex : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_assets_index"
+    override fun getDescription() = "Fetching asset index"
 
     override suspend fun execute(context: EmoContext) {
         val (_, _, result) = context.minecraftManifest!!.getAssetIndexUrl()
@@ -174,6 +181,7 @@ class FetchMinecraftAssetIndex : Process<EmoContext> {
 
 class FetchMinecraftAssets : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_assets"
+    override fun getDescription() = "Downloading assests for Minecraft"
 
     override suspend fun execute(context: EmoContext) {
         parallel(context.assetIndex!!.objects.entries, 20) {
@@ -195,6 +203,7 @@ class FetchMinecraftAssets : Process<EmoContext> {
 
 class FetchMinecraftJar : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_jar"
+    override fun getDescription() = "Fetching Minecraft executable"
 
     override suspend fun execute(context: EmoContext) {
         val (path, url) = when {

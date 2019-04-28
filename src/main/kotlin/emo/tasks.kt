@@ -19,6 +19,7 @@ import java.nio.file.Paths
 
 class CreateEmoProfile : Process<EmoContext> {
     override fun getName() = "emo.create_profile"
+    override fun getDescription() = "Creating emo profile"
 
     override suspend fun execute(context: EmoContext) {
         val config = Config { addSpec(Profile) }
@@ -41,6 +42,9 @@ class CreateEmoProfile : Process<EmoContext> {
     }
 }
 
+/**
+ * Default JVM arguments to be used when none are provided
+ */
 val DEFAULT_JVM_ARGS: List<String> = listOf(
     "-Djava.library.path=${'$'}{natives_directory}",
     "-Dminecraft.launcher.brand=${'$'}{launcher_name}",
@@ -49,13 +53,17 @@ val DEFAULT_JVM_ARGS: List<String> = listOf(
     "${'$'}{classpath}"
 )
 
+/**
+ * Default JVM Arguments to be used when none provided
+ * @see DEFAULT_JVM_ARGS
+ */
 val DEFAULT_JVM_ARGUMENTS: List<Argument> = listOf(
     Argument(listOf(), DEFAULT_JVM_ARGS)
 )
 
 class CreateEmoClientLock : Process<EmoContext> {
-
     override fun getName() = "emo.create_client_lock"
+    override fun getDescription() = "Creating client lock for emo"
 
     override suspend fun execute(context: EmoContext) {
         val vars = hashMapOf(
@@ -70,10 +78,11 @@ class CreateEmoClientLock : Process<EmoContext> {
 
         val forgeManifest = context.forgeManifest
 
+        val jvmArguments = context.minecraftManifest!!.getJVMArguments().let { if (it.isEmpty()) DEFAULT_JVM_ARGUMENTS else it }
+
         val (game, jvm) = when {
             forgeManifest == null -> {
-                Pair(context.minecraftManifest!!.getGameArguments(),
-                    context.minecraftManifest!!.getJVMArguments().let { if (it.isEmpty()) DEFAULT_JVM_ARGUMENTS else it })
+                Pair(context.minecraftManifest!!.getGameArguments(), jvmArguments)
             }
             SemVer.parse(context.selectedMinecraftVersion!!.id) >= SemVer(1, 13, 0) -> {
                 // Prepend Forge arguments
@@ -84,18 +93,13 @@ class CreateEmoClientLock : Process<EmoContext> {
                     ),
                     listOf(
                         *forgeManifest.getJVMArguments().toTypedArray(),
-                        *context.minecraftManifest!!.getJVMArguments().let { if (it.isEmpty()) DEFAULT_JVM_ARGUMENTS else it }.toTypedArray()
+                        *jvmArguments.toTypedArray()
                     )
                 )
             }
             else -> Pair(
                 context.forgeManifest!!.getGameArguments(),
-                listOf(
-                    Argument(
-                        listOf(),
-                        DEFAULT_JVM_ARGS
-                    )
-                )
+                jvmArguments
             )
         }
 
@@ -124,6 +128,7 @@ class CreateEmoClientLock : Process<EmoContext> {
 
 class AddProfile : Process<EmoContext> {
     override fun getName() = "emo.add_profile"
+    override fun getDescription() = "Adding profile to settings"
     override suspend fun execute(context: EmoContext) {
         context.instance!!.addProfile(
             context.modpack!!,
@@ -136,6 +141,7 @@ class AddProfile : Process<EmoContext> {
 
 class FetchMods : Process<EmoContext> {
     override fun getName() = "emo.fetch_mods"
+    override fun getDescription() = "Fetching mods"
     override suspend fun execute(context: EmoContext) {
         parallel(context.mods, 10) {
             val path = Paths.get(context.installLocation.toString(), "mods", it.name + ".jar")

@@ -28,28 +28,28 @@ interface ILibrary {
 
 private fun <T> Klaxon.convert(
     k: kotlin.reflect.KClass<*>,
-    fromJson: (JsonValue) -> T,
-    toJson: (T) -> String,
+    fromJson: Klaxon.(JsonValue) -> T,
+    toJson: Klaxon.(T) -> String,
     isUnion: Boolean = false
 ) =
     this.converter(object : Converter {
         @Suppress("UNCHECKED_CAST")
-        override fun toJson(value: Any) = toJson(value as T)
+        override fun toJson(value: Any) = toJson.invoke(this@convert, value as T)
 
-        override fun fromJson(jv: JsonValue) = fromJson(jv) as Any
+        override fun fromJson(jv: JsonValue) = fromJson.invoke(this@convert, jv) as Any
         override fun canConvert(cls: Class<*>) = cls == k.java || (isUnion && cls.superclass == k.java)
     })
 
 fun emoKlaxon() = Klaxon()
-    .convert(Argument::class, { Argument.fromJson(it) }, { Klaxon().toJsonString(it) }, true)
-    .convert(Action::class, { Action.fromValue(it.string!!) }, { "\"${it.value}\"" })
+    .convert(Argument::class, { Argument.fromJson(it) }, { findConverterFromClass(Any::class.java, null).toJson(it) }, true)
+    .convert(Action::class, { Action.fromValue(it.string!!) }, { toJsonString(it.value) })
     .convert(Regex::class, {
         when (it.inside) {
             is JsonObject -> Regex(it.obj!!.get("pattern") as String)
             is String -> Regex.fromLiteral(it.string!!)
             else -> throw IllegalArgumentException()
         }
-    }, { Klaxon().toJsonString(it.pattern) })
+    }, { toJsonString(it.pattern) })
 
 private val klaxonEmo = emoKlaxon()
 

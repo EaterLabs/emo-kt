@@ -36,13 +36,16 @@ fun getInstallWorkflow(ctx: EmoContext): Workflow<EmoContext> {
         bind(LoadForgeManifest())
         bind(FetchMinecraftJar())
 
-        // Forge
+        // Forge v1
         bind(FetchForgeVersions())
-        bind(FetchInstaller())
         bind(FetchUniversal())
         bind(FetchForgeLibraries())
+
+        // Forge v2
+        bind(FetchInstaller())
         bind(RunInstaller())
         bind(ForgeExtractManifest())
+        bind(ForgeCleanInstaller())
 
         // Emo
         bind(CreateEmoProfile())
@@ -61,7 +64,7 @@ fun getInstallWorkflow(ctx: EmoContext): Workflow<EmoContext> {
             }
 
             return@step "minecraft.fetch_versions"
-        }, name = "start")
+        }, name = "start", description = "Starting installer")
 
         step(
             "forge.fetch_versions",
@@ -91,14 +94,15 @@ fun getInstallWorkflow(ctx: EmoContext): Workflow<EmoContext> {
             } else {
                 "forge.v1.fetch_universal"
             }
-        }, name = "forge.select_installer")
+        }, name = "forge.select_installer", description = "Selecting correct Forge installer")
         step("forge.v1.fetch_universal", "forge.v1.load_manifest")
         step("forge.v1.load_manifest", "forge.v1.fetch_libraries")
         step("forge.v1.fetch_libraries", "emo.fetch_mods")
 
         step("forge.v2.fetch_installer", "forge.v2.run_installer")
         step("forge.v2.run_installer", "forge.v2.extract_manifest")
-        step("forge.v2.extract_manifest", "emo.fetch_mods")
+        step("forge.v2.extract_manifest", "forge.v2.clean_installer")
+        step("forge.v2.clean_installer", "emo.fetch_mods")
 
         step("emo.fetch_mods", "emo.create_profile")
         step("emo.create_profile", { if (it.target == Target.Client) "emo.create_client_lock" else null })
@@ -113,10 +117,7 @@ fun runInstallJob(ctx: EmoContext) {
     val workflow = getInstallWorkflow(ctx)
     workflow.processStarted += {
         println(
-            "Start process: ${it.step}${when (it.step) {
-                it.process.getName() -> ""
-                else -> " (${it.process.getName()})"
-            }}"
+            "INFO: ${it.description}"
         )
     }
 
@@ -125,7 +126,7 @@ fun runInstallJob(ctx: EmoContext) {
         workflow.waitFor()
     }
 
-    println("Completed.")
+    println("INFO: Completed.")
 }
 
 fun main(args: Array<String>) {

@@ -19,6 +19,8 @@ import java.util.jar.JarFile
 
 class FetchForgeVersions : Process<EmoContext> {
     override fun getName() = "forge.fetch_versions"
+    override fun getDescription() = "Fetching known Forge versions"
+
     override suspend fun execute(context: EmoContext) {
         if (context.forgeVersion!!.isStatic()) {
             context.selectedForgeVersion = context.forgeVersion.selector
@@ -49,6 +51,7 @@ class FetchForgeVersions : Process<EmoContext> {
 
 class FetchUniversal : Process<EmoContext> {
     override fun getName() = "forge.v1.fetch_universal"
+    override fun getDescription() = "Fetch universal Forge runtime"
 
     override suspend fun execute(context: EmoContext) {
         val versionTuple = "${context.selectedMinecraftVersion!!.id}-${context.selectedForgeVersion!!}"
@@ -67,6 +70,7 @@ class FetchUniversal : Process<EmoContext> {
 
 class LoadForgeManifest : Process<EmoContext> {
     override fun getName() = "forge.v1.load_manifest"
+    override fun getDescription() = "Loading Forge install manifest"
 
     override suspend fun execute(context: EmoContext) {
         io {
@@ -80,6 +84,7 @@ class LoadForgeManifest : Process<EmoContext> {
 
 class FetchForgeLibraries: Process<EmoContext> {
     override fun getName() = "forge.v1.fetch_libraries"
+    override fun getDescription() = "Fetching libraries for Forge"
 
     override suspend fun execute(context: EmoContext) {
         parallel((context.forgeManifest!! as Manifest).libraries) {

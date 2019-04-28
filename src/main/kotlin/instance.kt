@@ -31,7 +31,7 @@ class EmoInstance {
     private var lastSettingsMtime: Long = 0
     private var settings: Settings = Settings.load()
     private val klaxon = Klaxon()
-    private val localRepo = RepositoryDef("local", "$DataLocation/repo-local.json")
+    private val localRepo = RepositoryDefinition(RepositoryType.Local, "$DataLocation/repo-local.json")
 
     fun <T> useSettings(readOnly: Boolean = false, block: (settings: Settings) -> T): T {
         return settingsLock.withLock {
@@ -64,19 +64,19 @@ class EmoInstance {
         val repositories = useSettings { it.getConfiguredRepositories() }
         val repositoryCache: HashMap<String, RepositoryCache> = hashMapOf()
         val modpackCache: HashMap<String, ModpackCache> = hashMapOf()
-        val repos: MutableList<Pair<RepositoryDef, Repository>> = mutableListOf()
+        val repos: MutableList<Pair<RepositoryDefinition, Repository>> = mutableListOf()
 
         parallel(repositories.indices) {
             val sourceRepo = repositories[it]
             val repo = when (sourceRepo.type) {
-                "local" -> {
+                RepositoryType.Local -> {
                     io {
                         val json = File(sourceRepo.url).readText()
 
                         Repository.fromJson(json)
                     }
                 }
-                "remote" -> {
+                RepositoryType.Remote -> {
                     val json = sourceRepo.url.httpGet()
                         .awaitString()
 
@@ -189,9 +189,9 @@ class EmoInstance {
     /**
      * Remove a repository
      */
-    fun removeRepository(repositoryDef: RepositoryDef) {
+    fun removeRepository(repositoryDefinition: RepositoryDefinition) {
         useSettings { settings ->
-            settings.removeRepository(repositoryDef)
+            settings.removeRepository(repositoryDefinition)
         }
     }
 
@@ -232,6 +232,9 @@ class EmoInstance {
         }
     }
 
+    /**
+     * Save [localRepository] as the current local repo
+     */
     suspend fun saveLocalRepo(localRepository: MutableRepository) {
         io {
             val repoPath = Paths.get(localRepo.url)
@@ -428,15 +431,15 @@ data class ModpackCollectionCache(
 )
 
 data class RepositoryCache(
-    val def: RepositoryDef,
+    val definition: RepositoryDefinition,
     val name: String,
     val description: String = "",
     val logo: String? = null,
     val links: Links = Links()
 ) {
     companion object {
-        fun fromRepository(def: RepositoryDef, repository: Repository): RepositoryCache =
-            RepositoryCache(def, repository.name, repository.description, repository.logo, repository.links)
+        fun fromRepository(definition: RepositoryDefinition, repository: Repository): RepositoryCache =
+            RepositoryCache(definition, repository.name, repository.description, repository.logo, repository.links)
     }
 }
 

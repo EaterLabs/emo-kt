@@ -2,7 +2,13 @@ package me.eater.emo
 
 import me.eater.emo.minecraft.dto.manifest.*
 
+/**
+ * Holds checks and data about the current environment, which is used for selecting the correct libraries and natives
+ */
 class EmoEnvironment {
+    /**
+     * Normalized OS name for this environment
+     */
     val osName: String = System.getProperty("os.name").toLowerCase().run {
         when {
             this == "linux" -> "linux"
@@ -11,7 +17,15 @@ class EmoEnvironment {
             else -> "other"
         }
     }
+
+    /**
+     * OS version for this environment
+     */
     private val osVersion: String = System.getProperty("os.version")
+
+    /**
+     * Normalized OS architecture for this environment
+     */
     private val osArch: String = System.getProperty("os.arch").let {
         when (it) {
             "amd64" -> "x86"
@@ -21,6 +35,9 @@ class EmoEnvironment {
     }
 
 
+    /**
+     * Check if this environment passes the given OS check, returns true on pass, false on fail
+     */
     fun passesOSCheck(check: OS): Boolean {
         if (check.arch !== null && check.arch != osArch) {
             return false
@@ -37,6 +54,9 @@ class EmoEnvironment {
         return true
     }
 
+    /**
+     * Check if this environment passes the given [rule], returns true on pass, false on fail
+     */
     fun passesRule(rule: Rule): Boolean {
         val result: Boolean = rule.run result@{
             if (os !== null && !passesOSCheck(os)) {
@@ -57,6 +77,9 @@ class EmoEnvironment {
         return result
     }
 
+    /**
+     * Check if this environment passes the given [rules], returns true on pass, false on fail
+     */
     fun passesRules(rules: Iterable<Rule>): Boolean {
         for (rule in rules) {
             if (!passesRule(rule)) {
@@ -67,11 +90,27 @@ class EmoEnvironment {
         return true
     }
 
+    /**
+     * Select if there is a native artifact that we should select in this [library],
+     * Returns the native artifact if found
+     */
     fun selectNative(library: Library): Artifact? {
         if (library.natives.containsKey(osName)) {
-            return library.downloads.classifiers[library.natives[osName]]
+            return library.downloads.classifiers[expandSimpleTemplating(library.natives.getOrDefault(osName, ""))]
         }
 
         return null
+    }
+
+    /**
+     * Expand the simple string template that is used for natives, so far only ${arch} is supported.
+     */
+    private fun expandSimpleTemplating(input: String): String {
+        return input.replace(Regex("\\$\\{([A-Za-z0-9]+)}")) {
+            when (it.groupValues[1]) {
+                "arch" -> osArch
+                else -> it.value
+            }
+        }
     }
 }

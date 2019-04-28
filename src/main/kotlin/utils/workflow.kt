@@ -18,39 +18,39 @@ class WorkflowBuilder<C> {
         start = step
     }
 
-    fun step(process: String, router: Router<C>, name: String = process) {
+    fun step(process: String, router: Router<C>, name: String = process, description: String = processes[process]!!.getDescription()) {
         if (steps.containsKey(name)) {
             throw Exception("Workflow already has a step with the name $name.")
         }
 
-        this.steps[name] = ProcessChain(process, router)
+        this.steps[name] = ProcessChain(process, router, name, description)
     }
 
-    fun step(process: String, nextStep: String?, name: String = process) {
-        step(process, StaticRouter(nextStep), name)
+    fun step(process: String, nextStep: String?, name: String = process, description: String = processes[process]!!.getDescription()) {
+        step(process, StaticRouter(nextStep), name, description)
     }
 
-    fun step(process: String, router: (context: C) -> String?, name: String = process) {
+    fun step(process: String, router: (context: C) -> String?, name: String = process, description: String = processes[process]!!.getDescription()) {
         step(process, object : Router<C> {
             override fun route(context: C): String? {
                 return router(context)
             }
-        }, name)
+        }, name, description)
     }
 
-    fun step(process: Process<C>, router: Router<C>, name: String = process.getName()) {
+    fun step(process: Process<C>, router: Router<C>, name: String = process.getName(), description: String = process.getDescription()) {
         bind(process)
-        step(process.getName(), router, name)
+        step(process.getName(), router, name, description)
     }
 
-    fun step(process: Process<C>, nextStep: String?, name: String = process.getName()) {
+    fun step(process: Process<C>, nextStep: String?, name: String = process.getName(), description: String = process.getDescription()) {
         bind(process)
-        step(process.getName(), nextStep, name)
+        step(process.getName(), nextStep, name, description)
     }
 
-    fun step(process: Process<C>, router: (context: C) -> String?, name: String = process.getName()) {
+    fun step(process: Process<C>, router: (context: C) -> String?, name: String = process.getName(), description: String = process.getDescription()) {
         bind(process)
-        step(process.getName(), router, name)
+        step(process.getName(), router, name, description)
     }
 
     fun build(context: C): Workflow<C> {
@@ -58,7 +58,7 @@ class WorkflowBuilder<C> {
     }
 }
 
-data class ProcessChain<C>(val process: String, val router: Router<C>)
+data class ProcessChain<C>(val process: String, val router: Router<C>, val name: String = process, val description: String = "")
 
 interface Router<C> {
     fun route(context: C): String?
@@ -70,7 +70,7 @@ class StaticRouter<C>(private val step: String?) : Router<C> {
     }
 }
 
-data class ProcessStartedEvent<C>(val step: String, val process: Process<C>, val router: Router<C>)
+data class ProcessStartedEvent<C>(val step: String, val process: Process<C>, val router: Router<C>, val description: String = process.getDescription())
 data class WorkflowEvent<C>(val workflow: Workflow<C>)
 
 class Workflow<C>(
@@ -114,7 +114,7 @@ class Workflow<C>(
             process.execute(context)
         }
 
-        processStarted(ProcessStartedEvent(currentStep, process, router))
+        processStarted(ProcessStartedEvent(currentStep, process, router, chain.description))
         job.await()
         tryNext(router)
     }
@@ -139,6 +139,7 @@ class Workflow<C>(
 
 interface Process<in C> {
     fun getName(): String
+    fun getDescription(): String
     suspend fun execute(context: C)
 }
 
@@ -146,6 +147,8 @@ class Noop : Process<Any> {
     override fun getName(): String {
         return "noop"
     }
+
+    override fun getDescription() = "No-op process."
 
     override suspend fun execute(context: Any) {}
 }
