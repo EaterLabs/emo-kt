@@ -15,6 +15,9 @@ import java.nio.file.Paths
 import java.util.function.Predicate
 import java.util.jar.JarFile
 
+/**
+ * Process that fetches the Forge installer
+ */
 class FetchInstaller : Process<EmoContext> {
     override fun getName() = "forge.v2.fetch_installer"
     override fun getDescription() = "Fetching Forge installer"
@@ -37,6 +40,9 @@ class FetchInstaller : Process<EmoContext> {
     }
 }
 
+/**
+ * Process that runs the installer by the use of a classloader and loads of reflection
+ */
 class RunInstaller : Process<EmoContext> {
     override fun getName() = "forge.v2.run_installer"
     override fun getDescription() = "Running Forge installer"
@@ -96,6 +102,9 @@ class RunInstaller : Process<EmoContext> {
     }
 }
 
+/**
+ * Process that extracts the manifest from the forge installer
+ */
 class ForgeExtractManifest : Process<EmoContext> {
     override fun getName() = "forge.v2.extract_manifest"
     override fun getDescription() = "Extracting Forge install manifest"
@@ -108,6 +117,9 @@ class ForgeExtractManifest : Process<EmoContext> {
     }
 }
 
+/**
+ * Process that deletes the forge installer
+ */
 class ForgeCleanInstaller : Process<EmoContext> {
     override fun getName() = "forge.v2.clean_installer"
     override fun getDescription() = "Removing Forge installer"

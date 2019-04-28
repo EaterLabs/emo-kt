@@ -247,7 +247,7 @@ class EmoInstance {
     /**
      * Add local [modpack] to local repository, will inject [modpack] into cache and save that immediately afterwards
      */
-    suspend fun addLocalModpack(modpack: Modpack) {
+    suspend fun addLocalModpack(modpack: ModpackWithVersions) {
         val repo = getLocalRepo()
 
         useSettings { settings ->
@@ -269,7 +269,7 @@ class EmoInstance {
     }
 
     /**
-     * Remove account from settings by [uuid]
+     * Remove account from settings by [uuid], will also log out the account
      */
     suspend fun removeAccount(uuid: String) {
         val (accountMap, clientToken) = useSettings(true) {
@@ -281,7 +281,9 @@ class EmoInstance {
 
         authService.loadFromStorage(accountMap)
         try {
-            authService.logOut()
+            GlobalScope.async {
+                authService.logOut()
+            }.await()
         } catch (_: Throwable) {
             // Don't
         }
@@ -331,7 +333,7 @@ class EmoInstance {
      * This function is used by the install workflow
      */
     fun addProfile(modpack: Modpack, modpackVersion: ModpackVersion, location: String, name: String) {
-        val profile = Profile(location, name, modpack = modpackVersion, modpackName = modpack.name)
+        val profile = Profile(location, name, modpack.withoutVersions(), modpackVersion)
         useSettings { settings -> settings.addProfile(profile) }
     }
 
@@ -425,25 +427,70 @@ data class Account(
     }
 }
 
+/**
+ * Data object which holds cache of modpacks
+ */
 data class ModpackCollectionCache(
+    /**
+     * Cache of known repositories
+     */
     val repositoryCache: HashMap<String, RepositoryCache> = hashMapOf(),
+
+    /**
+     * Cache of known modpacks
+     */
     val modpackCache: HashMap<String, ModpackCache> = hashMapOf()
 )
 
+/**
+ * Repository cache
+ */
 data class RepositoryCache(
+    /**
+     * Definition of this repository
+     */
     val definition: RepositoryDefinition,
+
+    /**
+     * Name of this repository
+     */
     val name: String,
+
+    /**
+     * Description of this repository
+     */
     val description: String = "",
+
+    /**
+     * Logo of this repostiory
+     */
     val logo: String? = null,
+
+    /**
+     * Links about this repository
+     */
     val links: Links = Links()
 ) {
     companion object {
+        /**
+         * Create a cache object from the [RepositoryDefinition] and [Repository]
+         */
         fun fromRepository(definition: RepositoryDefinition, repository: Repository): RepositoryCache =
             RepositoryCache(definition, repository.name, repository.description, repository.logo, repository.links)
     }
 }
 
+/**
+ * Data object containing a [modpack] and a indentifier to the repository it originates from
+ */
 data class ModpackCache(
+    /**
+     * id of repository, fetch the repository with [EmoInstance.getRepository]
+     */
     val repository: String,
-    val modpack: Modpack
+
+    /**
+     * Cached version of the modpack defintion
+     */
+    val modpack: ModpackWithVersions
 )

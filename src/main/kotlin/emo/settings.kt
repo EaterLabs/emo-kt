@@ -4,6 +4,7 @@ import com.beust.klaxon.Converter
 import com.beust.klaxon.JsonValue
 import com.beust.klaxon.Klaxon
 import me.eater.emo.Account
+import me.eater.emo.emo.dto.repository.Modpack
 import me.eater.emo.emo.dto.repository.ModpackVersion
 import java.nio.charset.Charset
 import java.nio.file.Files
@@ -11,11 +12,17 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 
+/**
+ * Location of emo data storage
+ */
 val DataLocation: Path = when (System.getProperty("os.name").toLowerCase()) {
     "linux" -> Paths.get(System.getProperty("user.home"), "/.local/share/emo")
     else -> Paths.get(System.getProperty("user.home"), "/.emo")
 }
 
+/**
+ * Location of Settings file
+ */
 val SettingsLocation: Path = Paths.get(DataLocation.toString(), "/settings.json")
 
 private fun <T> Klaxon.convert(
@@ -32,9 +39,10 @@ private fun <T> Klaxon.convert(
         override fun canConvert(cls: Class<*>) = cls == k.java || (isUnion && cls.superclass == k.java)
     })
 
-var settingsKlaxon = Klaxon()
+private var settingsKlaxon = Klaxon()
     .convert(UUID::class, { UUID.fromString(it.string!!) }, { toJsonString("$it") })
     .convert(RepositoryType::class, { RepositoryType.fromString(it.string!!) }, { toJsonString("$it") })
+    .convert(ModpackVersion.Channel::class, { ModpackVersion.Channel.fromString(it.string!!) }, { toJsonString("$it") })
 
 /**
  * Class which holds all current settings
@@ -198,15 +206,27 @@ data class RepositoryDefinition(
     }
 }
 
+/**
+ * Type of repository
+ */
 enum class RepositoryType {
+    /**
+     * Remote repository type is used for a repository that should be fetched via http/s
+     */
     Remote {
         override fun toString() = "remote"
     },
+    /**
+     * Local repostiroy type is used for a repository that is located on the local computer
+     */
     Local {
         override fun toString() = "local"
     };
 
     companion object {
+        /**
+         * Create a repository type from string
+         */
         fun fromString(value: String) = when (value) {
             "remote" -> Remote
             "local" -> Local
@@ -215,11 +235,29 @@ enum class RepositoryType {
     }
 }
 
+/**
+ * Class that holds info about a profile, used for serialisation
+ */
 data class Profile(
+    /**
+     * Location where this profile is located
+     */
     val location: String,
+    /**
+     * Name of profile
+     */
     val name: String,
-    val modpackName: String,
-    val modpack: ModpackVersion
+    /**
+     * Name of modpack of this profile
+     */
+    val modpack: Modpack,
+    /**
+     * Modpack version
+     */
+    val modpackVersion: ModpackVersion
 ) {
+    /**
+     * Get [MinecraftExecutor] for this profile with [account]
+     */
     fun getExecutor(account: Account) = MinecraftExecutor(location, account)
 }

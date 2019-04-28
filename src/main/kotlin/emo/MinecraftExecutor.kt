@@ -11,7 +11,13 @@ import me.eater.emo.minecraft.dto.manifest.emoKlaxon
 import me.eater.emo.minecraft.dto.manifest.parseManifest
 import java.nio.file.Paths
 
-class MinecraftExecutor(val profileLocation: String, val account: Account) {
+/**
+ * Class used to start Minecraft
+ *
+ * @param profileLocation Location of minecraft install
+ * @param account Account to start minecraft with, may be null for a server
+ */
+class MinecraftExecutor(val profileLocation: String, val account: Account? = null) {
     var process: Process? = null
 
     /**
@@ -23,6 +29,10 @@ class MinecraftExecutor(val profileLocation: String, val account: Account) {
 
         val args = when (config[Profile.target]) {
             Target.Client -> {
+                if (account === null) {
+                    throw Error("Account is needed to start Minecraft")
+                }
+
                 val clientLock
                         : ClientLock = emoKlaxon()
                     .parse(Paths.get(profileLocation, ".emo/client.json").toFile())!!

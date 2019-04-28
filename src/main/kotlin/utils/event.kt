@@ -6,6 +6,9 @@ typealias Handler<EventType> = Consumer<EventType>
 
 internal operator fun <T> Handler<T>.invoke(t: T) = accept(t)
 
+/**
+ * Simple class that can hold callbacks for events
+ */
 class Event<T> : Iterable<MutableMap.MutableEntry<String, Handler<T>>> {
 
     private val list = LinkedHashMap<String, Handler<T>>()

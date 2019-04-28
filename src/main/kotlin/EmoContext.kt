@@ -65,20 +65,49 @@ class EmoContext(
      */
     val name: String? = null
 ) {
+    /**
+     * Holds Forge manifest, if available
+     */
     var forgeManifest: StartManifest? = null
+    /**
+     * Holds [AssetIndex] for current install
+     */
     var assetIndex: AssetIndex? = null
+
+    /**
+     * Holds the selected minecraft version, [Version] object, which contains the url to the manifest
+     */
     var selectedMinecraftVersion: Version? = null
+    /**
+     * Holds the selected Forge version
+     */
     var selectedForgeVersion: String? = null
+    /**
+     * Holds the install manifest of Minecraft
+     */
     var minecraftManifest: IManifest? = null
+    /**
+     * Holds the File of the downloaded Forge installer
+     */
     var forgeInstaller: File? = null
+
+    /**
+     * Queue for native libraries that should be extracted
+     */
     val extractQueue: ArrayList<Pair<Artifact, Extract>> = arrayListOf()
 
     private var versionsManifest: VersionsManifest? = null
 
+    /**
+     * Get the current [VersionsManifest]
+     */
     fun getVersionsManifest(): VersionsManifest {
         return versionsManifest!!
     }
 
+    /**
+     * Set the current [VersionsManifest]
+     */
     fun setVersionsManifest(manifest: VersionsManifest) {
         versionsManifest = manifest
     }

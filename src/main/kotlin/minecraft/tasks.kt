@@ -25,6 +25,9 @@ import java.util.jar.JarFile
 const val MINECRAFT_VERSIONS_MANIFEST = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
 const val MINECRAFT_ASSESTS_HOST_URL = "https://resources.download.minecraft.net/"
 
+/**
+ * Process that fetches version manifest
+ */
 class FetchVersionsManifest : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_versions"
     override fun getDescription() = "Fetching version manifest from Mojang"
@@ -37,6 +40,9 @@ class FetchVersionsManifest : Process<EmoContext> {
     }
 }
 
+/**
+ * Process that selects which Minecraft version to install
+ */
 class SelectMinecraftVersion : Process<EmoContext> {
     override fun getName() = "minecraft.select_version"
     override fun getDescription() = "Selecting Minecraft version to install"
@@ -61,6 +67,9 @@ class SelectMinecraftVersion : Process<EmoContext> {
     }
 }
 
+/**
+ * Process that will download the install manifest for selected minecraft version
+ */
 class FetchMinecraftManifest : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_manifest"
     override fun getDescription() = "Fetching Minecraft install manifest"
@@ -81,6 +90,9 @@ class FetchMinecraftManifest : Process<EmoContext> {
     }
 }
 
+/**
+ * Process that will download libraries for selected minecraft version
+ */
 class FetchMinecraftLibraries : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_libraries"
     override fun getDescription() = "Fetching libraries for Minecraft"
@@ -116,6 +128,9 @@ class FetchMinecraftLibraries : Process<EmoContext> {
     }
 }
 
+/**
+ * Process that will extract native libraries for current minecraft install
+ */
 class ExtractNatives : Process<EmoContext> {
     override fun getName() = "minecraft.extract_natives"
     override fun getDescription() = "Extracting Native libraries for Minecraft"
@@ -155,6 +170,9 @@ class ExtractNatives : Process<EmoContext> {
     }
 }
 
+/**
+ * Process that fetches the asset index for this minecraft install
+ */
 class FetchMinecraftAssetIndex : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_assets_index"
     override fun getDescription() = "Fetching asset index"
@@ -179,6 +197,9 @@ class FetchMinecraftAssetIndex : Process<EmoContext> {
     }
 }
 
+/**
+ * Process that fetches all assets for the current asset index
+ */
 class FetchMinecraftAssets : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_assets"
     override fun getDescription() = "Downloading assests for Minecraft"
@@ -201,6 +222,9 @@ class FetchMinecraftAssets : Process<EmoContext> {
     }
 }
 
+/**
+ * Process that fetches the minecraft jar for the current install
+ */
 class FetchMinecraftJar : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_jar"
     override fun getDescription() = "Fetching Minecraft executable"

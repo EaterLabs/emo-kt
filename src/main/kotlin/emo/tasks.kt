@@ -17,6 +17,9 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 
+/**
+ * Process that creates the emo profile needed to start this minecraft install
+ */
 class CreateEmoProfile : Process<EmoContext> {
     override fun getName() = "emo.create_profile"
     override fun getDescription() = "Creating emo profile"
@@ -61,6 +64,9 @@ val DEFAULT_JVM_ARGUMENTS: List<Argument> = listOf(
     Argument(listOf(), DEFAULT_JVM_ARGS)
 )
 
+/**
+ * Process that creates a client lock with additional info to start the minecraft client
+ */
 class CreateEmoClientLock : Process<EmoContext> {
     override fun getName() = "emo.create_client_lock"
     override fun getDescription() = "Creating client lock for emo"
@@ -126,6 +132,9 @@ class CreateEmoClientLock : Process<EmoContext> {
     }
 }
 
+/**
+ * Process that adds this profile to the settings
+ */
 class AddProfile : Process<EmoContext> {
     override fun getName() = "emo.add_profile"
     override fun getDescription() = "Adding profile to settings"
@@ -139,6 +148,9 @@ class AddProfile : Process<EmoContext> {
     }
 }
 
+/**
+ * Process that fetches the mods needed for this install
+ */
 class FetchMods : Process<EmoContext> {
     override fun getName() = "emo.fetch_mods"
     override fun getDescription() = "Fetching mods"

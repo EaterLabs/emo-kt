@@ -17,6 +17,9 @@ import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import java.util.jar.JarFile
 
+/**
+ * Process that fetches the known versions of Forge, and if needed selects the correct minecraft version
+ */
 class FetchForgeVersions : Process<EmoContext> {
     override fun getName() = "forge.fetch_versions"
     override fun getDescription() = "Fetching known Forge versions"
@@ -49,6 +52,9 @@ class FetchForgeVersions : Process<EmoContext> {
     }
 }
 
+/**
+ * Process that fetches the universal Forge jar
+ */
 class FetchUniversal : Process<EmoContext> {
     override fun getName() = "forge.v1.fetch_universal"
     override fun getDescription() = "Fetch universal Forge runtime"
@@ -68,6 +74,9 @@ class FetchUniversal : Process<EmoContext> {
     }
 }
 
+/**
+ * Process that loads the install manifest from the universal forge jar
+ */
 class LoadForgeManifest : Process<EmoContext> {
     override fun getName() = "forge.v1.load_manifest"
     override fun getDescription() = "Loading Forge install manifest"
@@ -82,6 +91,9 @@ class LoadForgeManifest : Process<EmoContext> {
     }
 }
 
+/**
+ * Process that fetches the libraries needed for forge
+ */
 class FetchForgeLibraries: Process<EmoContext> {
     override fun getName() = "forge.v1.fetch_libraries"
     override fun getDescription() = "Fetching libraries for Forge"
