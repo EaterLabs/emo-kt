@@ -1,0 +1,139 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>me.eater.emo.emo - emo</title>
+<link rel="stylesheet" href="../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">emo</a>&nbsp;/&nbsp;<a href="./index.html">me.eater.emo.emo</a><br/>
+<br/>
+<h2>Package me.eater.emo.emo</h2>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-add-profile/index.html">AddProfile</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">AddProfile</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../me.eater.emo.utils/-process/index.html"><span class="identifier">Process</span></a><span class="symbol">&lt;</span><a href="../me.eater.emo/-emo-context/index.html"><span class="identifier">EmoContext</span></a><span class="symbol">&gt;</span></code>
+<p>Process that adds this profile to the settings</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-create-emo-client-lock/index.html">CreateEmoClientLock</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">CreateEmoClientLock</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../me.eater.emo.utils/-process/index.html"><span class="identifier">Process</span></a><span class="symbol">&lt;</span><a href="../me.eater.emo/-emo-context/index.html"><span class="identifier">EmoContext</span></a><span class="symbol">&gt;</span></code>
+<p>Process that creates a client lock with additional info to start the minecraft client</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-create-emo-profile/index.html">CreateEmoProfile</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">CreateEmoProfile</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../me.eater.emo.utils/-process/index.html"><span class="identifier">Process</span></a><span class="symbol">&lt;</span><a href="../me.eater.emo/-emo-context/index.html"><span class="identifier">EmoContext</span></a><span class="symbol">&gt;</span></code>
+<p>Process that creates the emo profile needed to start this minecraft install</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-fetch-mods/index.html">FetchMods</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">FetchMods</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../me.eater.emo.utils/-process/index.html"><span class="identifier">Process</span></a><span class="symbol">&lt;</span><a href="../me.eater.emo/-emo-context/index.html"><span class="identifier">EmoContext</span></a><span class="symbol">&gt;</span></code>
+<p>Process that fetches the mods needed for this install</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-minecraft-executor/index.html">MinecraftExecutor</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">MinecraftExecutor</span></code>
+<p>Class used to start Minecraft</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-profile/index.html">Profile</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Profile</span></code>
+<p>Class that holds info about a profile, used for serialisation</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-repository-definition/index.html">RepositoryDefinition</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">RepositoryDefinition</span></code>
+<p>Repository Definition, stores data about a repository</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-repository-type/index.html">RepositoryType</a></p>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">RepositoryType</span></code>
+<p>Type of repository</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-settings/index.html">Settings</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Settings</span></code>
+<p>Class which holds all current settings</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-data-location.html">DataLocation</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">DataLocation</span><span class="symbol">: </span><span class="identifier">Path</span></code>
+<p>Location of emo data storage</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-d-e-f-a-u-l-t_-j-v-m_-a-r-g-s.html">DEFAULT_JVM_ARGS</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">DEFAULT_JVM_ARGS</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code>
+<p>Default JVM arguments to be used when none are provided</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-d-e-f-a-u-l-t_-j-v-m_-a-r-g-u-m-e-n-t-s.html">DEFAULT_JVM_ARGUMENTS</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">DEFAULT_JVM_ARGUMENTS</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../me.eater.emo.minecraft.dto.manifest/-argument/index.html"><span class="identifier">Argument</span></a><span class="symbol">&gt;</span></code>
+<p>Default JVM Arguments to be used when none provided</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-settings-location.html">SettingsLocation</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">SettingsLocation</span><span class="symbol">: </span><span class="identifier">Path</span></code>
+<p>Location of Settings file</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

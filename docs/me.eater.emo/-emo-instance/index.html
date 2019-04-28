@@ -1,0 +1,238 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>EmoInstance - emo</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">emo</a>&nbsp;/&nbsp;<a href="../index.html">me.eater.emo</a>&nbsp;/&nbsp;<a href="./index.html">EmoInstance</a><br/>
+<br/>
+<h1>EmoInstance</h1>
+<code><span class="keyword">class </span><span class="identifier">EmoInstance</span></code>
+<p>EmoInstance</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">EmoInstance</span><span class="symbol">(</span><span class="symbol">)</span></code>
+<p>EmoInstance</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="account-log-in.html">accountLogIn</a></p>
+</td>
+<td>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">accountLogIn</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.EmoInstance$accountLogIn(kotlin.String, kotlin.String, kotlin.Boolean)/username">username</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.EmoInstance$accountLogIn(kotlin.String, kotlin.String, kotlin.Boolean)/password">password</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.EmoInstance$accountLogIn(kotlin.String, kotlin.String, kotlin.Boolean)/save">save</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a>&nbsp;<span class="symbol">=</span>&nbsp;true<span class="symbol">)</span><span class="symbol">: </span><a href="../-account/index.html"><span class="identifier">Account</span></a></code>
+<p>Try to authenticate with the Minecraft servers with given <a href="account-log-in.html#me.eater.emo.EmoInstance$accountLogIn(kotlin.String, kotlin.String, kotlin.Boolean)/username">username</a> and <a href="account-log-in.html#me.eater.emo.EmoInstance$accountLogIn(kotlin.String, kotlin.String, kotlin.Boolean)/password">password</a>.
+Throws on login failure, set <a href="account-log-in.html#me.eater.emo.EmoInstance$accountLogIn(kotlin.String, kotlin.String, kotlin.Boolean)/save">save</a> to false to not save this account in the settings.
+(e.g. if you only want to check if these are correct credentials)</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="add-local-modpack.html">addLocalModpack</a></p>
+</td>
+<td>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">addLocalModpack</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.EmoInstance$addLocalModpack(me.eater.emo.emo.dto.repository.ModpackWithVersions)/modpack">modpack</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.emo.dto.repository/-modpack-with-versions/index.html"><span class="identifier">ModpackWithVersions</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Add local <a href="add-local-modpack.html#me.eater.emo.EmoInstance$addLocalModpack(me.eater.emo.emo.dto.repository.ModpackWithVersions)/modpack">modpack</a> to local repository, will inject <a href="add-local-modpack.html#me.eater.emo.EmoInstance$addLocalModpack(me.eater.emo.emo.dto.repository.ModpackWithVersions)/modpack">modpack</a> into cache and save that immediately afterwards</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="add-profile.html">addProfile</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">addProfile</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.EmoInstance$addProfile(me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, kotlin.String, kotlin.String)/modpack">modpack</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.emo.dto.repository/-modpack/index.html"><span class="identifier">Modpack</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.EmoInstance$addProfile(me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, kotlin.String, kotlin.String)/modpackVersion">modpackVersion</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.emo.dto.repository/-modpack-version/index.html"><span class="identifier">ModpackVersion</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.EmoInstance$addProfile(me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, kotlin.String, kotlin.String)/location">location</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.EmoInstance$addProfile(me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, kotlin.String, kotlin.String)/name">name</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Add profile with given <a href="add-profile.html#me.eater.emo.EmoInstance$addProfile(me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, kotlin.String, kotlin.String)/modpack">modpack</a> and <a href="add-profile.html#me.eater.emo.EmoInstance$addProfile(me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, kotlin.String, kotlin.String)/modpackVersion">modpackVersion</a> on <a href="add-profile.html#me.eater.emo.EmoInstance$addProfile(me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, kotlin.String, kotlin.String)/location">location</a> with <a href="add-profile.html#me.eater.emo.EmoInstance$addProfile(me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, kotlin.String, kotlin.String)/name">name</a> to settings.
+This function is used by the install workflow</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-accounts.html">getAccounts</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getAccounts</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../-account/index.html"><span class="identifier">Account</span></a><span class="symbol">&gt;</span></code>
+<p>Get a list of configured accounts saved in settings</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-account-via-authentication.html">getAccountViaAuthentication</a></p>
+</td>
+<td>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">getAccountViaAuthentication</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.EmoInstance$getAccountViaAuthentication(kotlin.String, kotlin.Boolean)/uuid">uuid</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;useSettings(true) { it.getSelectedAccountUuid() }<span class="symbol">, </span><span class="identifier" id="me.eater.emo.EmoInstance$getAccountViaAuthentication(kotlin.String, kotlin.Boolean)/requireLoggedIn">requireLoggedIn</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a>&nbsp;<span class="symbol">=</span>&nbsp;true<span class="symbol">)</span><span class="symbol">: </span><a href="../-account/index.html"><span class="identifier">Account</span></a></code>
+<p>Get an account by <a href="get-account-via-authentication.html#me.eater.emo.EmoInstance$getAccountViaAuthentication(kotlin.String, kotlin.Boolean)/uuid">uuid</a> if not given, selected account is used.
+Will try to reauthenticate with the mojang account service
+if <a href="get-account-via-authentication.html#me.eater.emo.EmoInstance$getAccountViaAuthentication(kotlin.String, kotlin.Boolean)/requireLoggedIn">requireLoggedIn</a> is true or not given, will throw on failed re-authentication</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-data-dir.html">getDataDir</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getDataDir</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>Get location where all configuration and other data is stored for user</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-emo-context-for-modpack.html">getEmoContextForModpack</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getEmoContextForModpack</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.EmoInstance$getEmoContextForModpack(me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, kotlin.String, me.eater.emo.Target, kotlin.String)/modpack">modpack</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.emo.dto.repository/-modpack/index.html"><span class="identifier">Modpack</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.EmoInstance$getEmoContextForModpack(me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, kotlin.String, me.eater.emo.Target, kotlin.String)/modpackVersion">modpackVersion</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.emo.dto.repository/-modpack-version/index.html"><span class="identifier">ModpackVersion</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.EmoInstance$getEmoContextForModpack(me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, kotlin.String, me.eater.emo.Target, kotlin.String)/installLocation">installLocation</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.EmoInstance$getEmoContextForModpack(me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, kotlin.String, me.eater.emo.Target, kotlin.String)/target">target</span><span class="symbol">:</span>&nbsp;<a href="../-target/index.html"><span class="identifier">Target</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.EmoInstance$getEmoContextForModpack(me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, kotlin.String, me.eater.emo.Target, kotlin.String)/name">name</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;modpack.name<span class="symbol">)</span><span class="symbol">: </span><a href="../-emo-context/index.html"><span class="identifier">EmoContext</span></a></code>
+<p>Get an <a href="../-emo-context/index.html">EmoContext</a> object for install configuration consisting of <a href="get-emo-context-for-modpack.html#me.eater.emo.EmoInstance$getEmoContextForModpack(me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, kotlin.String, me.eater.emo.Target, kotlin.String)/modpack">modpack</a>, <a href="get-emo-context-for-modpack.html#me.eater.emo.EmoInstance$getEmoContextForModpack(me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, kotlin.String, me.eater.emo.Target, kotlin.String)/modpackVersion">modpackVersion</a>, <a href="get-emo-context-for-modpack.html#me.eater.emo.EmoInstance$getEmoContextForModpack(me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, kotlin.String, me.eater.emo.Target, kotlin.String)/installLocation">installLocation</a>,
+<a href="get-emo-context-for-modpack.html#me.eater.emo.EmoInstance$getEmoContextForModpack(me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, kotlin.String, me.eater.emo.Target, kotlin.String)/target">target</a>, and <a href="get-emo-context-for-modpack.html#me.eater.emo.EmoInstance$getEmoContextForModpack(me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, kotlin.String, me.eater.emo.Target, kotlin.String)/name">name</a>, if no <a href="get-emo-context-for-modpack.html#me.eater.emo.EmoInstance$getEmoContextForModpack(me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, kotlin.String, me.eater.emo.Target, kotlin.String)/name">name</a> is given, name of modpack will be used</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-local-repo.html">getLocalRepo</a></p>
+</td>
+<td>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">getLocalRepo</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../me.eater.emo.emo.dto.repository/-mutable-repository/index.html"><span class="identifier">MutableRepository</span></a></code>
+<p>Get the local modpack repo, which is used for locally imported or created modpacks</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-minecraft-executor.html">getMinecraftExecutor</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getMinecraftExecutor</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.EmoInstance$getMinecraftExecutor(kotlin.String, me.eater.emo.Account)/location">location</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.EmoInstance$getMinecraftExecutor(kotlin.String, me.eater.emo.Account)/account">account</span><span class="symbol">:</span>&nbsp;<a href="../-account/index.html"><span class="identifier">Account</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../../me.eater.emo.emo/-minecraft-executor/index.html"><span class="identifier">MinecraftExecutor</span></a></code>
+<p>Get a <a href="../../me.eater.emo.emo/-minecraft-executor/index.html">MinecraftExecutor</a> for given <a href="get-minecraft-executor.html#me.eater.emo.EmoInstance$getMinecraftExecutor(kotlin.String, me.eater.emo.Account)/location">location</a> and <a href="get-minecraft-executor.html#me.eater.emo.EmoInstance$getMinecraftExecutor(kotlin.String, me.eater.emo.Account)/account">account</a></p>
+<code><span class="keyword">fun </span><span class="identifier">getMinecraftExecutor</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.EmoInstance$getMinecraftExecutor(me.eater.emo.emo.Profile, me.eater.emo.Account)/profile">profile</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.emo/-profile/index.html"><span class="identifier">Profile</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.EmoInstance$getMinecraftExecutor(me.eater.emo.emo.Profile, me.eater.emo.Account)/account">account</span><span class="symbol">:</span>&nbsp;<a href="../-account/index.html"><span class="identifier">Account</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../../me.eater.emo.emo/-minecraft-executor/index.html"><span class="identifier">MinecraftExecutor</span></a></code>
+<p>Get a <a href="../../me.eater.emo.emo/-minecraft-executor/index.html">MinecraftExecutor</a> for given <a href="get-minecraft-executor.html#me.eater.emo.EmoInstance$getMinecraftExecutor(me.eater.emo.emo.Profile, me.eater.emo.Account)/profile">profile</a> and <a href="get-minecraft-executor.html#me.eater.emo.EmoInstance$getMinecraftExecutor(me.eater.emo.emo.Profile, me.eater.emo.Account)/account">account</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-modpack.html">getModpack</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getModpack</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.EmoInstance$getModpack(kotlin.String)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../-modpack-cache/index.html"><span class="identifier">ModpackCache</span></a><span class="symbol">?</span></code>
+<p>Get modpack by handle</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-modpacks.html">getModpacks</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getModpacks</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="../-modpack-cache/index.html"><span class="identifier">ModpackCache</span></a><span class="symbol">&gt;</span></code>
+<p>Get all modpacks currently known to cache, indexed by id. id is enforced <code>[user-handle]/[modpack-id]</code></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-profiles.html">getProfiles</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getProfiles</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../me.eater.emo.emo/-profile/index.html"><span class="identifier">Profile</span></a><span class="symbol">&gt;</span></code>
+<p>Get list of profiles saved in settings</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-repositories.html">getRepositories</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getRepositories</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../me.eater.emo.emo/-repository-definition/index.html"><span class="identifier">RepositoryDefinition</span></a><span class="symbol">&gt;</span></code>
+<p>Get a list of configured repositories from settings</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-repository.html">getRepository</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getRepository</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.EmoInstance$getRepository(kotlin.String)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../-repository-cache/index.html"><span class="identifier">RepositoryCache</span></a><span class="symbol">?</span></code>
+<p>Get repository by id saved in <a href="../-modpack-cache/repository.html">ModpackCache.repository</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="load-modpack-collection-cache.html">loadModpackCollectionCache</a></p>
+</td>
+<td>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">loadModpackCollectionCache</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Load the current modpack collection cache from disk</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="remove-account.html">removeAccount</a></p>
+</td>
+<td>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">removeAccount</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.EmoInstance$removeAccount(kotlin.String)/uuid">uuid</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Remove account from settings by <a href="remove-account.html#me.eater.emo.EmoInstance$removeAccount(kotlin.String)/uuid">uuid</a>, will also log out the account</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="remove-repository.html">removeRepository</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">removeRepository</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.EmoInstance$removeRepository(me.eater.emo.emo.RepositoryDefinition)/repositoryDefinition">repositoryDefinition</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.emo/-repository-definition/index.html"><span class="identifier">RepositoryDefinition</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Remove a repository</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="run-install.html">runInstall</a></p>
+</td>
+<td>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">runInstall</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.EmoInstance$runInstall(me.eater.emo.EmoContext, kotlin.Function1((me.eater.emo.utils.ProcessStartedEvent((me.eater.emo.EmoContext)), kotlin.Unit)))/emoContext">emoContext</span><span class="symbol">:</span>&nbsp;<a href="../-emo-context/index.html"><span class="identifier">EmoContext</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.EmoInstance$runInstall(me.eater.emo.EmoContext, kotlin.Function1((me.eater.emo.utils.ProcessStartedEvent((me.eater.emo.EmoContext)), kotlin.Unit)))/stateStart">stateStart</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><a href="../../me.eater.emo.utils/-process-started-event/index.html"><span class="identifier">ProcessStartedEvent</span></a><span class="symbol">&lt;</span><a href="../-emo-context/index.html"><span class="identifier">EmoContext</span></a><span class="symbol">&gt;</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Run an install workflow for given <a href="run-install.html#me.eater.emo.EmoInstance$runInstall(me.eater.emo.EmoContext, kotlin.Function1((me.eater.emo.utils.ProcessStartedEvent((me.eater.emo.EmoContext)), kotlin.Unit)))/emoContext">emoContext</a>, <a href="run-install.html#me.eater.emo.EmoInstance$runInstall(me.eater.emo.EmoContext, kotlin.Function1((me.eater.emo.utils.ProcessStartedEvent((me.eater.emo.EmoContext)), kotlin.Unit)))/stateStart">stateStart</a> will be called everytime the install workflow changes
+to a state. function will return after install, or throw at failure</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="save-local-repo.html">saveLocalRepo</a></p>
+</td>
+<td>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">saveLocalRepo</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.EmoInstance$saveLocalRepo(me.eater.emo.emo.dto.repository.MutableRepository)/localRepository">localRepository</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.emo.dto.repository/-mutable-repository/index.html"><span class="identifier">MutableRepository</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Save <a href="save-local-repo.html#me.eater.emo.EmoInstance$saveLocalRepo(me.eater.emo.emo.dto.repository.MutableRepository)/localRepository">localRepository</a> as the current local repo</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="save-modpack-collection-cache.html">saveModpackCollectionCache</a></p>
+</td>
+<td>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">saveModpackCollectionCache</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Save current modpack collection, make sure either <a href="update-repositories.html">updateRepositories</a> or <a href="load-modpack-collection-cache.html">loadModpackCollectionCache</a> is called before, otherwise you will save an empty cache</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="update-repositories.html">updateRepositories</a></p>
+</td>
+<td>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">updateRepositories</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Fetches all remote and local repositories and indexes those, save the new cache with <a href="save-modpack-collection-cache.html">saveModpackCollectionCache</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="use-settings.html">useSettings</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <span class="identifier">useSettings</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.EmoInstance$useSettings(kotlin.Boolean, kotlin.Function1((me.eater.emo.emo.Settings, me.eater.emo.EmoInstance.useSettings.T)))/readOnly">readOnly</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a>&nbsp;<span class="symbol">=</span>&nbsp;false<span class="symbol">, </span><span class="identifier" id="me.eater.emo.EmoInstance$useSettings(kotlin.Boolean, kotlin.Function1((me.eater.emo.emo.Settings, me.eater.emo.EmoInstance.useSettings.T)))/block">block</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">settings</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.emo/-settings/index.html"><span class="identifier">Settings</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="use-settings.html#T"><span class="identifier">T</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="use-settings.html#T"><span class="identifier">T</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

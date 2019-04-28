@@ -1,0 +1,17 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>EmoInstance.getAccountViaAuthentication - emo</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">emo</a>&nbsp;/&nbsp;<a href="../index.html">me.eater.emo</a>&nbsp;/&nbsp;<a href="index.html">EmoInstance</a>&nbsp;/&nbsp;<a href="./get-account-via-authentication.html">getAccountViaAuthentication</a><br/>
+<br/>
+<h1>getAccountViaAuthentication</h1>
+<a name="me.eater.emo.EmoInstance$getAccountViaAuthentication(kotlin.String, kotlin.Boolean)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">getAccountViaAuthentication</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.EmoInstance$getAccountViaAuthentication(kotlin.String, kotlin.Boolean)/uuid">uuid</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;useSettings(true) { it.getSelectedAccountUuid() }<span class="symbol">, </span><span class="identifier" id="me.eater.emo.EmoInstance$getAccountViaAuthentication(kotlin.String, kotlin.Boolean)/requireLoggedIn">requireLoggedIn</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a>&nbsp;<span class="symbol">=</span>&nbsp;true<span class="symbol">)</span><span class="symbol">: </span><a href="../-account/index.html"><span class="identifier">Account</span></a></code>
+<p>Get an account by <a href="get-account-via-authentication.html#me.eater.emo.EmoInstance$getAccountViaAuthentication(kotlin.String, kotlin.Boolean)/uuid">uuid</a> if not given, selected account is used.
+Will try to reauthenticate with the mojang account service
+if <a href="get-account-via-authentication.html#me.eater.emo.EmoInstance$getAccountViaAuthentication(kotlin.String, kotlin.Boolean)/requireLoggedIn">requireLoggedIn</a> is true or not given, will throw on failed re-authentication</p>
+</BODY>
+</HTML>

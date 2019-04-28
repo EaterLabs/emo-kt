@@ -1,0 +1,204 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Settings - emo</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">emo</a>&nbsp;/&nbsp;<a href="../index.html">me.eater.emo.emo</a>&nbsp;/&nbsp;<a href="./index.html">Settings</a><br/>
+<br/>
+<h1>Settings</h1>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Settings</span></code>
+<p>Class which holds all current settings</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">Settings</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.emo.Settings$<init>(kotlin.String, kotlin.String, java.util.HashMap((kotlin.String, kotlin.collections.Map((, kotlin.Any)))), kotlin.collections.MutableList((me.eater.emo.emo.Profile)), kotlin.collections.MutableList((me.eater.emo.emo.RepositoryDefinition)))/clientToken">clientToken</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.emo.Settings$<init>(kotlin.String, kotlin.String, java.util.HashMap((kotlin.String, kotlin.collections.Map((, kotlin.Any)))), kotlin.collections.MutableList((me.eater.emo.emo.Profile)), kotlin.collections.MutableList((me.eater.emo.emo.RepositoryDefinition)))/selectedAccount">selectedAccount</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="me.eater.emo.emo.Settings$<init>(kotlin.String, kotlin.String, java.util.HashMap((kotlin.String, kotlin.collections.Map((, kotlin.Any)))), kotlin.collections.MutableList((me.eater.emo.emo.Profile)), kotlin.collections.MutableList((me.eater.emo.emo.RepositoryDefinition)))/accounts">accounts</span><span class="symbol">:</span>&nbsp;<a href="https://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html"><span class="identifier">HashMap</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span>&nbsp;<span class="symbol">=</span>&nbsp;hashMapOf()<span class="symbol">, </span><span class="identifier" id="me.eater.emo.emo.Settings$<init>(kotlin.String, kotlin.String, java.util.HashMap((kotlin.String, kotlin.collections.Map((, kotlin.Any)))), kotlin.collections.MutableList((me.eater.emo.emo.Profile)), kotlin.collections.MutableList((me.eater.emo.emo.RepositoryDefinition)))/profiles">profiles</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/index.html"><span class="identifier">MutableList</span></a><span class="symbol">&lt;</span><a href="../-profile/index.html"><span class="identifier">Profile</span></a><span class="symbol">&gt;</span>&nbsp;<span class="symbol">=</span>&nbsp;mutableListOf()<span class="symbol">, </span><span class="identifier" id="me.eater.emo.emo.Settings$<init>(kotlin.String, kotlin.String, java.util.HashMap((kotlin.String, kotlin.collections.Map((, kotlin.Any)))), kotlin.collections.MutableList((me.eater.emo.emo.Profile)), kotlin.collections.MutableList((me.eater.emo.emo.RepositoryDefinition)))/repositories">repositories</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/index.html"><span class="identifier">MutableList</span></a><span class="symbol">&lt;</span><a href="../-repository-definition/index.html"><span class="identifier">RepositoryDefinition</span></a><span class="symbol">&gt;</span>&nbsp;<span class="symbol">=</span>&nbsp;mutableListOf()<span class="symbol">)</span></code>
+<p>Class which holds all current settings</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="accounts.html">accounts</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">accounts</span><span class="symbol">: </span><a href="https://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html"><span class="identifier">HashMap</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="client-token.html">clientToken</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">clientToken</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="profiles.html">profiles</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">profiles</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/index.html"><span class="identifier">MutableList</span></a><span class="symbol">&lt;</span><a href="../-profile/index.html"><span class="identifier">Profile</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="repositories.html">repositories</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">repositories</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/index.html"><span class="identifier">MutableList</span></a><span class="symbol">&lt;</span><a href="../-repository-definition/index.html"><span class="identifier">RepositoryDefinition</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="selected-account.html">selectedAccount</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">selectedAccount</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="add-account.html">addAccount</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">addAccount</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.emo.Settings$addAccount(kotlin.collections.MutableMap((kotlin.String, kotlin.Any)))/account">account</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/index.html"><span class="identifier">MutableMap</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Add account data retrieved from Yggdrasil to settings</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="add-profile.html">addProfile</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">addProfile</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.emo.Settings$addProfile(me.eater.emo.emo.Profile)/profile">profile</span><span class="symbol">:</span>&nbsp;<a href="../-profile/index.html"><span class="identifier">Profile</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>Add <a href="add-profile.html#me.eater.emo.emo.Settings$addProfile(me.eater.emo.emo.Profile)/profile">profile</a> to settings</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="add-repository.html">addRepository</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">addRepository</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.emo.Settings$addRepository(me.eater.emo.emo.RepositoryDefinition)/repositoryDefinition">repositoryDefinition</span><span class="symbol">:</span>&nbsp;<a href="../-repository-definition/index.html"><span class="identifier">RepositoryDefinition</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>Add repository definition to settings</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-account.html">getAccount</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getAccount</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.emo.Settings$getAccount(kotlin.String)/uuid">uuid</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span></code>
+<p>Get account by <a href="get-account.html#me.eater.emo.emo.Settings$getAccount(kotlin.String)/uuid">uuid</a>, will throw when no account is found</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-accounts.html">getAccounts</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getAccounts</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get all account maps in a list</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-configured-repositories.html">getConfiguredRepositories</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getConfiguredRepositories</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../-repository-definition/index.html"><span class="identifier">RepositoryDefinition</span></a><span class="symbol">&gt;</span></code>
+<p>Get currently configured repository definitons</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-profiles.html">getProfiles</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getProfiles</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../-profile/index.html"><span class="identifier">Profile</span></a><span class="symbol">&gt;</span></code>
+<p>Get profiles from settings</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-selected-account.html">getSelectedAccount</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getSelectedAccount</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span><span class="symbol">?</span></code>
+<p>Get currently selected account, will throw when no accounts are configured</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-selected-account-uuid.html">getSelectedAccountUuid</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getSelectedAccountUuid</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>Get currently selected account uuid, will throw when no accounts are configured</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="remove-account.html">removeAccount</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">removeAccount</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.emo.Settings$removeAccount(kotlin.String)/uuid">uuid</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Remove account by <a href="remove-account.html#me.eater.emo.emo.Settings$removeAccount(kotlin.String)/uuid">uuid</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="remove-repository.html">removeRepository</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">removeRepository</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.emo.Settings$removeRepository(me.eater.emo.emo.RepositoryDefinition)/repositoryDefinition">repositoryDefinition</span><span class="symbol">:</span>&nbsp;<a href="../-repository-definition/index.html"><span class="identifier">RepositoryDefinition</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>Remove repository definition from settings</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="save.html">save</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">save</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Save settings to file</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="select-account.html">selectAccount</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">selectAccount</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.emo.Settings$selectAccount(kotlin.String)/uuid">uuid</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Set selected account by <a href="select-account.html#me.eater.emo.emo.Settings$selectAccount(kotlin.String)/uuid">uuid</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Companion Object Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="load.html">load</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">load</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">Settings</span></a></code>
+<p>Load settings from file, if settings is corrupt or not found a new settings file is created.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

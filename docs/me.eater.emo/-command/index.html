@@ -1,0 +1,69 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Command - emo</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">emo</a>&nbsp;/&nbsp;<a href="../index.html">me.eater.emo</a>&nbsp;/&nbsp;<a href="./index.html">Command</a><br/>
+<br/>
+<h1>Command</h1>
+<code><span class="keyword">interface </span><span class="identifier">Command</span></code>
+<p>Command abstraction</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="execute.html">execute</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">execute</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Execute command</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-import-command/index.html">ImportCommand</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">ImportCommand</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">Command</span></a></code>
+<p>Command to import a profile and install a new minecraft profile based on that</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-init-command/index.html">InitCommand</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">InitCommand</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">Command</span></a></code>
+<p>Initialise a new Minecraft install by versions</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-login-command/index.html">LoginCommand</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">LoginCommand</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">Command</span></a></code>
+<p>Command for logging in</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-start-command/index.html">StartCommand</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">StartCommand</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">Command</span></a></code>
+<p>Start Minecraft from a profile directory</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
