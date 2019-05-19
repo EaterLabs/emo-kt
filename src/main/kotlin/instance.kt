@@ -30,7 +30,7 @@ class EmoInstance {
     private val settingsLock = ReentrantLock()
     private var lastSettingsMtime: Long = 0
     private var settings: Settings = Settings.load()
-    private val klaxon = Klaxon()
+    private val klaxon = repositoryKlaxon
     private val localRepo = RepositoryDefinition(RepositoryType.Local, "$DataLocation/repo-local.json")
 
     fun <T> useSettings(readOnly: Boolean = false, block: (settings: Settings) -> T): T {

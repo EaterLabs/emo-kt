@@ -19,7 +19,7 @@ private fun <T> Klaxon.convert(
         override fun canConvert(cls: Class<*>) = cls == k.java || (isUnion && cls.superclass == k.java)
     })
 
-private val klaxon = Klaxon()
+val repositoryKlaxon = Klaxon()
     .convert(ModpackVersion.Channel::class, { ModpackVersion.Channel.fromString(it.string!!) }, { toJsonString("$it") })
 
 
@@ -30,10 +30,10 @@ open class Repository(
     val links: Links = Links(),
     open val modpacks: Map<String, ModpackWithVersions> = mapOf()
 ) {
-    public fun toJson() = klaxon.toJsonString(this)
+    public fun toJson() = repositoryKlaxon.toJsonString(this)
 
     companion object {
-        public fun fromJson(json: String) = klaxon.parse<Repository>(json)
+        public fun fromJson(json: String) = repositoryKlaxon.parse<Repository>(json)
     }
 }
 
