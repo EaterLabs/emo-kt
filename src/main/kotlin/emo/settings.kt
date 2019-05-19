@@ -40,7 +40,7 @@ private fun <T> Klaxon.convert(
         override fun canConvert(cls: Class<*>) = cls == k.java || (isUnion && cls.superclass == k.java)
     })
 
-private var settingsKlaxon = Klaxon()
+var settingsKlaxon = Klaxon()
     .convert(UUID::class, { UUID.fromString(it.string!!) }, { toJsonString("$it") })
     .convert(RepositoryType::class, { RepositoryType.fromString(it.string!!) }, { toJsonString("$it") })
     .convert(ModpackVersion.Channel::class, { ModpackVersion.Channel.fromString(it.string!!) }, { toJsonString("$it") })
