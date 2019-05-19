@@ -1,6 +1,7 @@
 package me.eater.emo.emo
 
 import com.beust.klaxon.Converter
+import com.beust.klaxon.Json
 import com.beust.klaxon.JsonValue
 import com.beust.klaxon.Klaxon
 import me.eater.emo.Account
@@ -201,6 +202,7 @@ data class RepositoryDefinition(
     /**
      * Get unique hash of this [RepositoryDefinition], is a base64 of [type] and [url] joined by an ':'
      */
+    @Json(ignored = true)
     val hash by lazy {
         Base64.getEncoder().encode("$type:$url".toByteArray()).toString(Charset.defaultCharset())
     }

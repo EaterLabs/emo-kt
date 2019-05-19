@@ -155,14 +155,13 @@ data class ModpackVersion(
         override fun toString(): String = value
 
         companion object {
-            fun fromString(value: String) {
+            fun fromString(value: String) =
                 when (value) {
                     "release" -> Release
                     "beta" -> Beta
                     "alpha" -> Alpha
                     else -> throw IllegalArgumentException()
                 }
-            }
         }
     }
 }
