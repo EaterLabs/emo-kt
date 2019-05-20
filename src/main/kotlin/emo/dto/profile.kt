@@ -1,13 +1,19 @@
 package me.eater.emo.emo.dto
 
-import com.uchuhimo.konf.ConfigSpec
 import me.eater.emo.Target
 import me.eater.emo.emo.dto.repository.Mod
+import me.eater.emo.emo.settingsKlaxon
 
-object Profile : ConfigSpec("emo") {
-    val name by optional("emo")
-    val target by optional(Target.Client)
-    val minecraft by required<String>()
-    val forge by required<String?>()
-    val mods by optional<List<Mod>>(listOf())
+data class Profile (
+    val name: String,
+    val target: Target,
+    val minecraft: String,
+    val forge: String? = null,
+    val mods: List<Mod>
+) {
+    public fun toJson() = settingsKlaxon.toJsonString(this)
+
+    companion object {
+        public fun fromJson(json: String) = settingsKlaxon.parse<Profile>(json)
+    }
 }

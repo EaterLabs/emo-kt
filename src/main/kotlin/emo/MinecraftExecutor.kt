@@ -1,6 +1,5 @@
 package me.eater.emo.emo
 
-import com.uchuhimo.konf.Config
 import me.eater.emo.Account
 import me.eater.emo.EmoEnvironment
 import me.eater.emo.Target
@@ -9,6 +8,7 @@ import me.eater.emo.emo.dto.Profile
 import me.eater.emo.minecraft.dto.manifest.Argument
 import me.eater.emo.minecraft.dto.manifest.emoKlaxon
 import me.eater.emo.minecraft.dto.manifest.parseManifest
+import java.io.File
 import java.nio.file.Paths
 
 /**
@@ -24,10 +24,9 @@ class MinecraftExecutor(val profileLocation: String, val account: Account? = nul
      * Start minecraft for given [profileLocation] and [account], returns running [Process]
      */
     fun execute(): Process {
-        val config = Config { addSpec(Profile) }
-        config.from.toml.file(Paths.get(profileLocation, "emo.toml").toFile())
+        val profile = Profile.fromJson(File("$profileLocation/emo.json").readText())!!
 
-        val args = when (config[Profile.target]) {
+        val args = when (profile.target) {
             Target.Client -> {
                 if (account === null) {
                     throw Error("Account is needed to start Minecraft")
@@ -84,8 +83,8 @@ class MinecraftExecutor(val profileLocation: String, val account: Account? = nul
                 listOf(
                     "java",
                     "-jar",
-                    when (config[Profile.forge]) {
-                        null -> "minecraft_server.${config[Profile.minecraft]}.jar"
+                    when (profile.forge) {
+                        null -> "minecraft_server.${profile.minecraft}.jar"
                         else -> "forge.jar"
                     },
                     "-nogui"

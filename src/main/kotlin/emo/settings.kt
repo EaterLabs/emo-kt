@@ -5,6 +5,7 @@ import com.beust.klaxon.Json
 import com.beust.klaxon.JsonValue
 import com.beust.klaxon.Klaxon
 import me.eater.emo.Account
+import me.eater.emo.Target
 import me.eater.emo.emo.dto.repository.Modpack
 import me.eater.emo.emo.dto.repository.ModpackVersion
 import java.nio.charset.Charset
@@ -44,6 +45,7 @@ var settingsKlaxon = Klaxon()
     .convert(UUID::class, { UUID.fromString(it.string!!) }, { toJsonString("$it") })
     .convert(RepositoryType::class, { RepositoryType.fromString(it.string!!) }, { toJsonString("$it") })
     .convert(ModpackVersion.Channel::class, { ModpackVersion.Channel.fromString(it.string!!) }, { toJsonString("$it") })
+    .convert(Target::class, { Target.fromString(it.string!!) }, { toJsonString("$it") })
 
 /**
  * Class which holds all current settings

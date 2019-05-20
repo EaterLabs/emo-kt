@@ -4,10 +4,10 @@ import com.beust.jcommander.JCommander
 import com.beust.jcommander.Parameter
 import com.beust.jcommander.ParameterException
 import com.beust.jcommander.Parameters
-import com.uchuhimo.konf.Config
 import kotlinx.coroutines.runBlocking
-import me.eater.emo.emo.*
+import me.eater.emo.emo.MinecraftExecutor
 import me.eater.emo.emo.dto.Profile
+import java.io.File
 import java.nio.file.Paths
 import kotlin.system.exitProcess
 
@@ -16,7 +16,23 @@ import kotlin.system.exitProcess
  */
 enum class Target {
     Server,
-    Client
+    Client;
+
+    override fun toString(): String =
+        when (this) {
+            Client -> "client"
+            Server -> "server"
+        }
+
+
+    companion object {
+        fun fromString(value: String): Target =
+            when (value.toLowerCase()) {
+                "server" -> Server
+                else -> Client
+            }
+
+    }
 }
 
 /**
@@ -106,16 +122,16 @@ class ImportCommand(
     var profile: String? = null
 ) : Command {
     override fun execute() {
-        profile = (profile ?: "${location[0].expandTilde()}/emo.toml").expandTilde()
+        profile = (profile ?: "${location[0].expandTilde()}/emo.json").expandTilde()
 
-        val config = Config { addSpec(Profile) }.from.toml.file(Paths.get(profile).toFile())
+        val config = Profile.fromJson(File(profile).readText())!!
 
         val ctx = EmoContext(
-            minecraftVersion = VersionSelector(config[Profile.minecraft]),
-            forgeVersion = config[Profile.forge]?.let { it -> VersionSelector(it) },
-            target = config[Profile.target],
+            minecraftVersion = VersionSelector(config.minecraft),
+            forgeVersion = VersionSelector.fromStringOrNull(config.forge),
+            target = config.target,
             installLocation = Paths.get(location[0].expandTilde()),
-            mods = config[Profile.mods]
+            mods = config.mods
         )
 
         runInstallJob(ctx)

@@ -1,8 +1,6 @@
 package me.eater.emo.emo
 
 import com.github.kittinunf.fuel.httpDownload
-import com.uchuhimo.konf.Config
-import com.uchuhimo.konf.source.toml.toToml
 import me.eater.emo.EmoContext
 import me.eater.emo.emo.dto.ClientLock
 import me.eater.emo.emo.dto.Profile
@@ -25,22 +23,18 @@ class CreateEmoProfile : Process<EmoContext> {
     override fun getDescription() = "Creating emo profile"
 
     override suspend fun execute(context: EmoContext) {
-        val config = Config { addSpec(Profile) }
+        val profile = Profile(
+            context.name ?: "emo",
+            context.target,
+            context.selectedMinecraftVersion!!.id,
+            context.selectedForgeVersion,
+            context.mods
+        )
 
-        config[Profile.minecraft] = context.selectedMinecraftVersion!!.id
-        config.unset(Profile.forge)
-        if (context.selectedForgeVersion !== null) {
-            config[Profile.forge] = context.selectedForgeVersion!!
-        }
-        config.unset(Profile.mods)
-        if (context.mods.isNotEmpty()) {
-            config[Profile.mods] = context.mods
-        }
-
-        val path = Paths.get(context.installLocation.toString(), "emo.toml")
+        val path = Paths.get(context.installLocation.toString(), "emo.json")
 
         io {
-            config.toToml.toFile(path.toString())
+            path.toFile().writeText(profile.toJson())
         }
     }
 }
@@ -84,7 +78,8 @@ class CreateEmoClientLock : Process<EmoContext> {
 
         val forgeManifest = context.forgeManifest
 
-        val jvmArguments = context.minecraftManifest!!.getJVMArguments().let { if (it.isEmpty()) DEFAULT_JVM_ARGUMENTS else it }
+        val jvmArguments =
+            context.minecraftManifest!!.getJVMArguments().let { if (it.isEmpty()) DEFAULT_JVM_ARGUMENTS else it }
 
         val (game, jvm) = when {
             forgeManifest == null -> {
