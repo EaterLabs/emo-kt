@@ -285,7 +285,7 @@ class Workflow<C>(
             process.execute(context)
         }
 
-        processStarted(ProcessStartedEvent(currentStep, process, router, chain.description))
+        processStarted.handle(ProcessStartedEvent(currentStep, process, router, chain.description))
         job.await()
         tryNext(router)
     }
@@ -295,7 +295,7 @@ class Workflow<C>(
 
         if (nextStep === null) {
             finished = true
-            workflowFinished(WorkflowEvent(this))
+            workflowFinished.handle(WorkflowEvent(this))
             return
         }
 
