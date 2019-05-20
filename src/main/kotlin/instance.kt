@@ -1,5 +1,6 @@
 package me.eater.emo
 
+import com.beust.klaxon.Json
 import com.github.kittinunf.fuel.coroutines.awaitString
 import com.github.kittinunf.fuel.httpGet
 import com.mojang.authlib.Agent
@@ -24,6 +25,7 @@ import kotlin.concurrent.withLock
 /**
  * EmoInstance
  */
+@Suppress("UNUSED")
 class EmoInstance {
     private var modpackCollectionCache: ModpackCollectionCache = ModpackCollectionCache()
     private val settingsLock = ReentrantLock()
@@ -63,42 +65,53 @@ class EmoInstance {
         val repositories = useSettings { it.getConfiguredRepositories() }
         val repositoryCache: HashMap<String, RepositoryCache> = hashMapOf()
         val modpackCache: HashMap<String, ModpackCache> = hashMapOf()
-        val repos: MutableList<Pair<RepositoryDefinition, Repository>> = mutableListOf()
+        val repos: MutableList<Pair<RepositoryDefinition, Result<Repository>>> = mutableListOf()
 
         parallel(repositories.indices) {
             val sourceRepo = repositories[it]
             val repo = try {
-                when (sourceRepo.type) {
+                val json = when (sourceRepo.type) {
                     RepositoryType.Local -> {
                         io {
-                            val json = File(sourceRepo.url).readText()
-
-                            Repository.fromJson(json)
+                            File(sourceRepo.url).readText()
                         }
                     }
                     RepositoryType.Remote -> {
-                        val json = sourceRepo.url.httpGet()
+                        sourceRepo.url.httpGet()
                             .awaitString()
-
-                        Repository.fromJson(json)
                     }
-                    else -> null
                 }
+
+                Result.success(Repository.fromJson(json)!!)
             } catch (t: Throwable) {
-                t.printStackTrace()
-
-                null
+                Result.failure<Repository>(t)
             }
 
-            if (repo !== null) {
-                repos.add(sourceRepo to repo)
-            }
+            repos.add(Pair(sourceRepo, repo))
         }
 
-        repos.forEach { (def, repo) ->
-            repositoryCache.set(def.hash, RepositoryCache.fromRepository(def, repo))
-            repo.modpacks.forEach { _, modpack ->
-                modpackCache.set(modpack.id, ModpackCache(def.hash, modpack))
+        repos.forEach { (def, repoResult) ->
+            val fakeRepoMaybe = when {
+                repoResult.isSuccess -> RepositoryCache.fromRepository(def, repoResult.getOrThrow())
+                modpackCollectionCache.repositoryCache.containsKey(def.hash) -> modpackCollectionCache.repositoryCache[def.hash]!!.copy(
+                    status = RepositoryCache.Status.Broken(repoResult.exceptionOrNull()!!)
+                )
+                else -> RepositoryCache(
+                    def,
+                    name = "Unknown",
+                    status = RepositoryCache.Status.Broken(repoResult.exceptionOrNull()!!),
+                    description = "This repository has been added but couldn't be fetched."
+                )
+            }
+
+            repositoryCache.set(def.hash, fakeRepoMaybe)
+
+            if (repoResult.isSuccess) {
+                repoResult.getOrThrow().modpacks.forEach { _, modpack ->
+                    modpackCache.set(modpack.id, ModpackCache(def.hash, modpack))
+                }
+            } else if (modpackCollectionCache.repositoryCache.containsKey(def.hash)) {
+                modpackCache.putAll(modpackCollectionCache.modpackCache.filter { it.value.repository == def.hash })
             }
         }
 
@@ -474,7 +487,13 @@ data class RepositoryCache(
     /**
      * Links about this repository
      */
-    val links: Links = Links()
+    val links: Links = Links(),
+
+    /**
+     * Status of repository, filled after update
+     */
+    @Json(ignored = true)
+    val status: Status = Status.Ok
 ) {
     companion object {
         /**
@@ -482,6 +501,18 @@ data class RepositoryCache(
          */
         fun fromRepository(definition: RepositoryDefinition, repository: Repository): RepositoryCache =
             RepositoryCache(definition, repository.name, repository.description, repository.logo, repository.links)
+    }
+
+    sealed class Status {
+        object Ok : Status()
+        data class Broken(val t: Throwable) : Status()
+
+        fun isOkay() = this is Ok
+        fun isBroken() = this is Broken
+        fun getExceptionOrNull(): Throwable? = when (this) {
+            is Broken -> this.t
+            else -> null
+        }
     }
 }
 
