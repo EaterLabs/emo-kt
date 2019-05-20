@@ -371,6 +371,7 @@ class EmoInstance {
     suspend fun runInstall(emoContext: EmoContext, stateStart: suspend (ProcessStartedEvent<EmoContext>) -> Unit) {
         val workflow = getInstallWorkflow(emoContext)
         workflow.processStarted += stateStart
+        workflow.execute()
         workflow.waitFor()
     }
 
