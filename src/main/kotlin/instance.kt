@@ -1,6 +1,5 @@
 package me.eater.emo
 
-import com.beust.klaxon.Klaxon
 import com.github.kittinunf.fuel.coroutines.awaitString
 import com.github.kittinunf.fuel.httpGet
 import com.mojang.authlib.Agent
@@ -68,21 +67,27 @@ class EmoInstance {
 
         parallel(repositories.indices) {
             val sourceRepo = repositories[it]
-            val repo = when (sourceRepo.type) {
-                RepositoryType.Local -> {
-                    io {
-                        val json = File(sourceRepo.url).readText()
+            val repo = try {
+                when (sourceRepo.type) {
+                    RepositoryType.Local -> {
+                        io {
+                            val json = File(sourceRepo.url).readText()
+
+                            Repository.fromJson(json)
+                        }
+                    }
+                    RepositoryType.Remote -> {
+                        val json = sourceRepo.url.httpGet()
+                            .awaitString()
 
                         Repository.fromJson(json)
                     }
+                    else -> null
                 }
-                RepositoryType.Remote -> {
-                    val json = sourceRepo.url.httpGet()
-                        .awaitString()
+            } catch (t: Throwable) {
+                t.printStackTrace()
 
-                    Repository.fromJson(json)
-                }
-                else -> null
+                null
             }
 
             if (repo !== null) {
