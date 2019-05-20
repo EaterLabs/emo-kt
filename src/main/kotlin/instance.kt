@@ -87,7 +87,9 @@ class EmoInstance {
                 Result.failure<Repository>(t)
             }
 
-            repos.add(Pair(sourceRepo, repo))
+            synchronized(repos) {
+                repos.add(Pair(sourceRepo, repo))
+            }
         }
 
         repos.forEach { (def, repoResult) ->
@@ -366,7 +368,7 @@ class EmoInstance {
      * Run an install workflow for given [emoContext], [stateStart] will be called everytime the install workflow changes
      * to a state. function will return after install, or throw at failure
      */
-    suspend fun runInstall(emoContext: EmoContext, stateStart: (ProcessStartedEvent<EmoContext>) -> Unit) {
+    suspend fun runInstall(emoContext: EmoContext, stateStart: suspend (ProcessStartedEvent<EmoContext>) -> Unit) {
         val workflow = getInstallWorkflow(emoContext)
         workflow.processStarted += stateStart
         workflow.waitFor()
