@@ -9,28 +9,31 @@ class EmoEnvironment {
     /**
      * Normalized OS name for this environment
      */
-    val osName: String = System.getProperty("os.name").toLowerCase().run {
-        when {
-            this == "linux" -> "linux"
-            this.contains("mac", true) -> "osx"
-            this.contains("windows", true) -> "windows"
-            else -> "other"
+    val osName: String by lazy {
+        System.getProperty("os.name").toLowerCase().run {
+            when {
+                this == "linux" -> "linux"
+                this.contains("mac", true) -> "osx"
+                this.contains("windows", true) -> "windows"
+                else -> "other"
+            }
         }
     }
 
     /**
      * OS version for this environment
      */
-    private val osVersion: String = System.getProperty("os.version")
+    private val osVersion: String by lazy { System.getProperty("os.version") }
 
     /**
      * Normalized OS architecture for this environment
      */
-    private val osArch: String = System.getProperty("os.arch").let {
-        when (it) {
-            "amd64" -> "x86"
-            "x86_64" -> "x86"
-            else -> it
+    val osArch: String by lazy {
+        System.getProperty("os.arch").let {
+            if (Regex("""^(x8664|amd64|ia32e|em64t|x64)${'$'}""").matches(it))
+                "64"
+            else
+                "32"
         }
     }
 
