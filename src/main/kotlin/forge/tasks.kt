@@ -1,7 +1,6 @@
 package me.eater.emo.forge
 
-import com.github.kittinunf.fuel.core.await
-import com.github.kittinunf.fuel.core.awaitResponse
+import com.github.kittinunf.fuel.core.FuelError
 import com.github.kittinunf.fuel.coroutines.awaitByteArrayResponse
 import com.github.kittinunf.fuel.coroutines.awaitString
 import com.github.kittinunf.fuel.httpDownload
@@ -9,16 +8,22 @@ import com.github.kittinunf.fuel.httpGet
 import me.eater.emo.EmoContext
 import me.eater.emo.Target
 import me.eater.emo.VersionSelector
+import me.eater.emo.forge.dto.manifest.v1.Library
 import me.eater.emo.forge.dto.manifest.v1.Manifest
 import me.eater.emo.forge.dto.promotions.Promotions
 import me.eater.emo.utils.Process
 import me.eater.emo.utils.io
 import me.eater.emo.utils.parallel
+import org.tukaani.xz.XZInputStream
 import java.io.File
+import java.io.FileOutputStream
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
+import java.util.jar.JarEntry
 import java.util.jar.JarFile
+import java.util.jar.JarOutputStream
+import java.util.jar.Pack200
 
 /**
  * Process that fetches the known versions of Forge, and if needed selects the correct minecraft version
@@ -72,6 +77,7 @@ class FetchUniversal : Process<EmoContext> {
                 .httpDownload()
                 .fileDestination { _, _ -> Paths.get(context.installLocation.toString(), "forge.jar").toFile() }
                 .awaitByteArrayResponse()
+
         }
     }
 }
@@ -96,7 +102,7 @@ class LoadForgeManifest : Process<EmoContext> {
 /**
  * Process that fetches the libraries needed for forge
  */
-class FetchForgeLibraries: Process<EmoContext> {
+class FetchForgeLibraries : Process<EmoContext> {
     override fun getName() = "forge.v1.fetch_libraries"
     override fun getDescription() = "Fetching libraries for Forge"
 
@@ -113,16 +119,66 @@ class FetchForgeLibraries: Process<EmoContext> {
 
             if (Files.exists(file)) return@parallel
 
-            (mirror + '/' + it.getPath())
-                .httpDownload()
-                .fileDestination { _, _ -> file.toFile() }
-                .awaitByteArrayResponse()
+            try {
+                (mirror + '/' + it.getPath())
+                    .httpDownload()
+                    .fileDestination { _, _ -> file.toFile() }
+                    .awaitByteArrayResponse()
+            } catch (t: Throwable) {
+                if (t is FuelError && t.response.statusCode == 404 && it.url != null) {
+                    tryDownloadingPack(it, file.toFile())
+                } else {
+                    throw t
+                }
+            }
+
         }
 
         if (context.target == Target.Client) {
-            val newPath = Paths.get(context.installLocation.toString(), "libraries/net/minecraftforge/forge", "${context.selectedMinecraftVersion!!.id}-${context.selectedForgeVersion!!}", "forge-${context.selectedMinecraftVersion!!.id}-${context.selectedForgeVersion!!}.jar")
+            val newPath = Paths.get(
+                context.installLocation.toString(),
+                "libraries/net/minecraftforge/forge",
+                "${context.selectedMinecraftVersion!!.id}-${context.selectedForgeVersion!!}",
+                "forge-${context.selectedMinecraftVersion!!.id}-${context.selectedForgeVersion!!}.jar"
+            )
             Files.createDirectories(newPath.parent)
-            Files.move(Paths.get(context.installLocation.toString(), "forge.jar"), newPath, StandardCopyOption.REPLACE_EXISTING)
+            Files.move(
+                Paths.get(context.installLocation.toString(), "forge.jar"),
+                newPath,
+                StandardCopyOption.REPLACE_EXISTING
+            )
+        }
+    }
+
+
+    @ExperimentalUnsignedTypes
+    suspend fun tryDownloadingPack(lib: Library, dest: File) {
+        val (_, _, data) = ("${lib.url!!}/${lib.getPath()}.pack.xz")
+            .httpGet()
+            .awaitByteArrayResponse()
+
+        io {
+            val decompressed = XZInputStream(data.inputStream()).readBytes()
+            // val decompressedBuffer = ByteBuffer.wrap(decompressed)
+            val decompressedLen = decompressed.size
+
+            val blobLen = (decompressed[decompressedLen - 8].toUByte() and 0xFF.toUByte()).toInt() or
+                    ((decompressed[decompressedLen - 7].toUByte() and 0xFF.toUByte()).toInt() shl 8) or
+                    ((decompressed[decompressedLen - 6].toUByte() and 0xFF.toUByte()).toInt() shl 16) or
+                    ((decompressed[decompressedLen - 5].toUByte() and 0xFF.toUByte()).toInt() shl 24)
+
+
+            val checksums = decompressed.copyOfRange(decompressedLen - blobLen - 8, decompressedLen - 8)
+            val jarFile = FileOutputStream(dest)
+            val jar = JarOutputStream(jarFile)
+            Pack200.newUnpacker().unpack(decompressed.inputStream(0, decompressedLen - blobLen - 8), jar)
+            val checksumsEntry = JarEntry("checksums.sha1")
+            checksumsEntry.time = 0
+            jar.putNextEntry(checksumsEntry)
+            jar.write(checksums)
+            jar.closeEntry()
+            jar.close()
+            jarFile.close()
         }
     }
 }
