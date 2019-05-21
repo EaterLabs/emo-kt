@@ -3,6 +3,7 @@ package me.eater.emo.minecraft
 import com.beust.klaxon.Klaxon
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.requests.download
+import com.github.kittinunf.fuel.coroutines.awaitByteArrayResponse
 import com.github.kittinunf.fuel.coroutines.awaitString
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.github.kittinunf.fuel.httpDownload
@@ -112,7 +113,7 @@ class FetchMinecraftLibraries : Process<EmoContext> {
         }
     }
 
-    private fun download(ctx: EmoContext, artifact: Artifact) {
+    private suspend fun download(ctx: EmoContext, artifact: Artifact) {
         val path: Path = Paths.get(ctx.installLocation.toString(), "libraries", artifact.path)
 
         if (Files.exists(path)) return
@@ -123,8 +124,7 @@ class FetchMinecraftLibraries : Process<EmoContext> {
             .httpGet()
             .download()
             .fileDestination { _, _ -> File(path.toUri()) }
-            .response { _ -> }
-            .join()
+            .awaitByteArrayResponse()
     }
 }
 
@@ -216,8 +216,7 @@ class FetchMinecraftAssets : Process<EmoContext> {
             (MINECRAFT_ASSESTS_HOST_URL + assetId)
                 .httpDownload()
                 .fileDestination { _, _ -> path.toFile() }
-                .response { _ -> }
-                .join()
+                .awaitByteArrayResponse()
         }
     }
 }
@@ -245,7 +244,6 @@ class FetchMinecraftJar : Process<EmoContext> {
         url
             .httpDownload()
             .fileDestination { _, _ -> Paths.get(context.installLocation.toString(), path).toFile() }
-            .response { _ -> }
-            .join()
+            .awaitByteArrayResponse()
     }
 }

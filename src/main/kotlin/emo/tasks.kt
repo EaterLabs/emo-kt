@@ -1,5 +1,6 @@
 package me.eater.emo.emo
 
+import com.github.kittinunf.fuel.coroutines.awaitByteArrayResponse
 import com.github.kittinunf.fuel.httpDownload
 import me.eater.emo.EmoContext
 import me.eater.emo.emo.dto.ClientLock
@@ -157,8 +158,7 @@ class FetchMods : Process<EmoContext> {
             it.url
                 .httpDownload()
                 .fileDestination { _, _ -> path.toFile() }
-                .response { _ -> }
-                .join()
+                .awaitByteArrayResponse()
         }
 
     }

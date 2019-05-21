@@ -1,5 +1,6 @@
 package me.eater.emo.forge
 
+import com.github.kittinunf.fuel.coroutines.awaitByteArrayResponse
 import com.github.kittinunf.fuel.httpDownload
 import me.eater.emo.EmoContext
 import me.eater.emo.Target
@@ -32,8 +33,7 @@ class FetchInstaller : Process<EmoContext> {
             artifactUrl
                 .httpDownload()
                 .fileDestination { _, _ -> file }
-                .response { _ -> }
-                .join()
+                .awaitByteArrayResponse()
 
             context.forgeInstaller = file
         }

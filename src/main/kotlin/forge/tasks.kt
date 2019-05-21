@@ -1,5 +1,8 @@
 package me.eater.emo.forge
 
+import com.github.kittinunf.fuel.core.await
+import com.github.kittinunf.fuel.core.awaitResponse
+import com.github.kittinunf.fuel.coroutines.awaitByteArrayResponse
 import com.github.kittinunf.fuel.coroutines.awaitString
 import com.github.kittinunf.fuel.httpDownload
 import com.github.kittinunf.fuel.httpGet
@@ -68,8 +71,7 @@ class FetchUniversal : Process<EmoContext> {
             artifactUrl
                 .httpDownload()
                 .fileDestination { _, _ -> Paths.get(context.installLocation.toString(), "forge.jar").toFile() }
-                .response { _ ->}
-                .join()
+                .awaitByteArrayResponse()
         }
     }
 }
@@ -114,8 +116,7 @@ class FetchForgeLibraries: Process<EmoContext> {
             (mirror + '/' + it.getPath())
                 .httpDownload()
                 .fileDestination { _, _ -> file.toFile() }
-                .response { _ -> }
-                .join()
+                .awaitByteArrayResponse()
         }
 
         if (context.target == Target.Client) {
