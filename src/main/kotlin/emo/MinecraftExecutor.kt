@@ -64,7 +64,7 @@ class MinecraftExecutor(val profileLocation: String, val account: Account? = nul
 
                 // Set default template variables and add variables from clientLock
                 val vars = hashMapOf(
-                    Pair("classpath", classpath.joinToString(if (environment.osName == "windows") ";" else ":")),
+                    Pair("classpath", classpath.joinToString(File.pathSeparator)),
                     Pair("user_type", "mojang"),
                     Pair("auth_uuid", account.uuid),
                     Pair("auth_player_name", account.displayName),
