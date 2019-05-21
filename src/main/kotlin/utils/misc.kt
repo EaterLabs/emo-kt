@@ -16,10 +16,10 @@ suspend fun <T>io(
  */
 suspend fun <T> parallel(items: Iterable<T>, parallel: Int = 10, call: suspend (T) -> Unit) {
     val channel = Channel<T>()
-    val jobs = arrayListOf<Job>()
+    val jobs = arrayListOf<Deferred<Unit>>()
 
     repeat(parallel) {
-        jobs.add(GlobalScope.launch {
+        jobs.add(GlobalScope.async {
             for (item in channel) {
                 call(item)
             }
@@ -31,5 +31,5 @@ suspend fun <T> parallel(items: Iterable<T>, parallel: Int = 10, call: suspend (
     }
 
     channel.close()
-    jobs.joinAll()
+    jobs.awaitAll()
 }
