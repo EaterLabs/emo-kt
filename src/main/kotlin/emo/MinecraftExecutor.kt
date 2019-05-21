@@ -4,6 +4,7 @@ import me.eater.emo.Account
 import me.eater.emo.EmoEnvironment
 import me.eater.emo.Target
 import me.eater.emo.emo.dto.ClientLock
+import me.eater.emo.emo.dto.LaunchOptions
 import me.eater.emo.emo.dto.Profile
 import me.eater.emo.minecraft.dto.manifest.Argument
 import me.eater.emo.minecraft.dto.manifest.emoKlaxon
@@ -26,15 +27,22 @@ class MinecraftExecutor(val profileLocation: String, val account: Account? = nul
     fun execute(): Process {
         val profile = Profile.fromJson(File("$profileLocation/emo.json").readText())!!
 
+        val launchOptionsFile = Paths.get(profileLocation, ".emo/launch.json").toFile()
+        val launchOptions: LaunchOptions = if (launchOptionsFile.exists()) {
+            emoKlaxon().parse(launchOptionsFile.readText())!!
+        } else {
+            LaunchOptions()
+        }
+
         val args = when (profile.target) {
             Target.Client -> {
                 if (account === null) {
                     throw Error("Account is needed to start Minecraft")
                 }
 
-                val clientLock
-                        : ClientLock = emoKlaxon()
-                    .parse(Paths.get(profileLocation, ".emo/client.json").toFile())!!
+                val clientLock: ClientLock =
+                    emoKlaxon()
+                        .parse(Paths.get(profileLocation, ".emo/client.json").toFile())!!
 
                 val manifest = parseManifest(
                     Paths.get(
@@ -76,12 +84,19 @@ class MinecraftExecutor(val profileLocation: String, val account: Account? = nul
                     vars
                 )
 
-                listOf("java") + jvmArgs + listOf(clientLock.start!!.mainClass) + gameArgs
+                listOf(
+                    listOf(launchOptions.java ?: "java"),
+                    jvmArgs,
+                    launchOptions.getJVMArgs().toList(),
+                    listOf(clientLock.start!!.mainClass),
+                    gameArgs
+                ).flatten()
             }
             Target.Server -> {
                 // -should- work
                 listOf(
-                    "java",
+                    launchOptions.java ?: "java",
+                    *launchOptions.getJVMArgs(),
                     "-jar",
                     when (profile.forge) {
                         null -> "minecraft_server.${profile.minecraft}.jar"

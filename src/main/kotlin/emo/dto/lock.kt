@@ -13,3 +13,13 @@ data class StartLock(
     var extraLibraries: List<String>,
     var mainClass: String
 )
+
+data class LaunchOptions(
+    var java: String? = null,
+    var jvmArgs: String? = null
+) {
+    fun getJVMArgs(): Array<String> =
+        (jvmArgs?.split(Regex("\\s+"))?.filter { it.isNotBlank() }
+            ?: listOf()).toTypedArray()
+
+}
