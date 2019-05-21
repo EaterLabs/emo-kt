@@ -12,6 +12,7 @@ import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.time.Instant
 import java.util.*
 
 /**
@@ -46,6 +47,7 @@ var settingsKlaxon = Klaxon()
     .convert(RepositoryType::class, { RepositoryType.fromString(it.string!!) }, { toJsonString("$it") })
     .convert(ModpackVersion.Channel::class, { ModpackVersion.Channel.fromString(it.string!!) }, { toJsonString("$it") })
     .convert(Target::class, { Target.fromString(it.string!!) }, { toJsonString("$it") })
+    .convert(Instant::class, { Instant.parse(it.string!!) }, { toJsonString("$it") })
 
 /**
  * Class which holds all current settings
@@ -258,7 +260,15 @@ data class Profile(
     /**
      * Modpack version
      */
-    val modpackVersion: ModpackVersion
+    val modpackVersion: ModpackVersion,
+    /**
+     * Time created
+     */
+    val createdOn: Instant = Instant.MIN,
+    /**
+     * Time last touched
+     */
+    val lastTouched: Instant = if (createdOn == Instant.MIN) Instant.now() else createdOn
 ) {
     /**
      * Get [MinecraftExecutor] for this profile with [account]
