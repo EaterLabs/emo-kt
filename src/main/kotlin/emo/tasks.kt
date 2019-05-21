@@ -9,6 +9,7 @@ import me.eater.emo.emo.dto.StartLock
 import me.eater.emo.minecraft.dto.manifest.Argument
 import me.eater.emo.minecraft.dto.manifest.emoKlaxon
 import me.eater.emo.utils.Process
+import me.eater.emo.utils.await
 import me.eater.emo.utils.io
 import me.eater.emo.utils.parallel
 import net.swiftzer.semver.SemVer
@@ -158,7 +159,7 @@ class FetchMods : Process<EmoContext> {
             it.url
                 .httpDownload()
                 .fileDestination { _, _ -> path.toFile() }
-                .awaitByteArrayResponse()
+                .await()
         }
 
     }

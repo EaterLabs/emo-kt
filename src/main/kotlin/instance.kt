@@ -10,6 +10,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import me.eater.emo.emo.*
 import me.eater.emo.emo.dto.repository.*
+import me.eater.emo.minecraft.dto.launcher.LauncherArtifact
+import me.eater.emo.minecraft.dto.launcher.LauncherManifest
 import me.eater.emo.utils.ProcessStartedEvent
 import me.eater.emo.utils.io
 import me.eater.emo.utils.parallel
@@ -408,6 +410,22 @@ class EmoInstance {
      * Get a [MinecraftExecutor] for given [profile] and [account]
      */
     fun getMinecraftExecutor(profile: Profile, account: Account) = getMinecraftExecutor(profile.location, account)
+
+
+    suspend fun getAvailableJRE(environment: EmoEnvironment = EmoEnvironment()): LauncherArtifact? {
+        val json = "http://launchermeta.mojang.com/mc/launcher.json"
+            .httpGet()
+            .awaitString()
+        val launcherManifest = LauncherManifest.fromJson(json)!!
+
+        return launcherManifest[environment.osName]?.let {
+            if (environment.osArch == "64" && it.sixtyFour !== null) {
+                it.sixtyFour.jre
+            } else {
+                it.thirtyTwo?.jre
+            }
+        }
+    }
 }
 
 /**

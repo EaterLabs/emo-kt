@@ -12,6 +12,7 @@ import me.eater.emo.forge.dto.manifest.v1.Library
 import me.eater.emo.forge.dto.manifest.v1.Manifest
 import me.eater.emo.forge.dto.promotions.Promotions
 import me.eater.emo.utils.Process
+import me.eater.emo.utils.await
 import me.eater.emo.utils.io
 import me.eater.emo.utils.parallel
 import org.tukaani.xz.XZInputStream
@@ -76,7 +77,7 @@ class FetchUniversal : Process<EmoContext> {
             artifactUrl
                 .httpDownload()
                 .fileDestination { _, _ -> Paths.get(context.installLocation.toString(), "forge.jar").toFile() }
-                .awaitByteArrayResponse()
+                .await()
 
         }
     }
@@ -123,7 +124,7 @@ class FetchForgeLibraries : Process<EmoContext> {
                 (mirror + '/' + it.getPath())
                     .httpDownload()
                     .fileDestination { _, _ -> file.toFile() }
-                    .awaitByteArrayResponse()
+                    .await()
             } catch (t: Throwable) {
                 if (t is FuelError && t.response.statusCode == 404 && it.url != null) {
                     tryDownloadingPack(it, file.toFile())

@@ -1,17 +1,14 @@
 package me.eater.emo.forge
 
-import com.github.kittinunf.fuel.coroutines.awaitByteArrayResponse
 import com.github.kittinunf.fuel.httpDownload
 import me.eater.emo.EmoContext
 import me.eater.emo.Target
-import me.eater.emo.forge.dto.manifest.v1.Manifest
 import me.eater.emo.minecraft.dto.manifest.emoKlaxon
-import me.eater.emo.minecraft.dto.manifest.parseManifest
 import me.eater.emo.utils.Process
+import me.eater.emo.utils.await
 import me.eater.emo.utils.io
 import java.io.File
 import java.net.URLClassLoader
-import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.function.Predicate
 import java.util.jar.JarFile
@@ -33,7 +30,7 @@ class FetchInstaller : Process<EmoContext> {
             artifactUrl
                 .httpDownload()
                 .fileDestination { _, _ -> file }
-                .awaitByteArrayResponse()
+                .await()
 
             context.forgeInstaller = file
         }
@@ -64,7 +61,8 @@ class RunInstaller : Process<EmoContext> {
         val actionClass = loader.loadClass("$prefix.actions.Action")
         val installProfile = util.getDeclaredMethod("loadInstallProfile").invoke(null)
         val installAction =
-            installActionClass.getConstructor(install, progressCallbackClass).newInstance(installProfile, progressCallback)
+            installActionClass.getConstructor(install, progressCallbackClass)
+                .newInstance(installProfile, progressCallback)
 
         val libraryDir = Paths.get(context.installLocation.toString(), "libraries").toFile()
         val minecraftLoc = Paths.get(context.installLocation.toString(), "minecraft.jar").toFile()
@@ -90,11 +88,12 @@ class RunInstaller : Process<EmoContext> {
             .get(installAction)
         val postProcessorsClass = loader.loadClass("$prefix.actions.PostProcessors")
 
-        val successPostProcess = postProcessorsClass.getDeclaredMethod("process", File::class.java, File::class.java).invoke(
-            processors,
-            libraryDir,
-            minecraftLoc
-        ) as Boolean
+        val successPostProcess =
+            postProcessorsClass.getDeclaredMethod("process", File::class.java, File::class.java).invoke(
+                processors,
+                libraryDir,
+                minecraftLoc
+            ) as Boolean
 
         if (!successPostProcess) {
             throw Error("Failed to post process Minecraft for Forge")

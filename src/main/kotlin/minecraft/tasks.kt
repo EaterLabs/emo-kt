@@ -15,6 +15,7 @@ import me.eater.emo.minecraft.dto.manifest.Artifact
 import me.eater.emo.minecraft.dto.manifest.parseManifest
 import me.eater.emo.minecraft.dto.minecraft_versions.VersionsManifest
 import me.eater.emo.utils.Process
+import me.eater.emo.utils.await
 import me.eater.emo.utils.io
 import me.eater.emo.utils.parallel
 import java.io.File
@@ -124,7 +125,7 @@ class FetchMinecraftLibraries : Process<EmoContext> {
             .httpGet()
             .download()
             .fileDestination { _, _ -> File(path.toUri()) }
-            .awaitByteArrayResponse()
+            .await()
     }
 }
 
@@ -178,11 +179,11 @@ class FetchMinecraftAssetIndex : Process<EmoContext> {
     override fun getDescription() = "Fetching asset index"
 
     override suspend fun execute(context: EmoContext) {
-        val (_, _, result) = context.minecraftManifest!!.getAssetIndexUrl()
+        val result = context.minecraftManifest!!.getAssetIndexUrl()
             .httpGet()
-            .awaitStringResponseResult()
+            .awaitString()
 
-        val index = AssetIndex.fromJson(result.get())
+        val index = AssetIndex.fromJson(result)
         context.assetIndex = index
 
         io {
@@ -192,7 +193,7 @@ class FetchMinecraftAssetIndex : Process<EmoContext> {
                 context.minecraftManifest!!.getAssetIndexId() + ".json"
             )
             Files.createDirectories(assetIndexPath.parent)
-            assetIndexPath.toFile().writeText(result.get())
+            assetIndexPath.toFile().writeText(result)
         }
     }
 }
