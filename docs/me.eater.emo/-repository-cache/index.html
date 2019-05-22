@@ -10,6 +10,18 @@
 <h1>RepositoryCache</h1>
 <code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">RepositoryCache</span></code>
 <p>Repository cache</p>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-status/index.html">Status</a></p>
+</td>
+<td>
+<code><span class="keyword">sealed</span> <span class="keyword">class </span><span class="identifier">Status</span></code></td>
+</tr>
+</tbody>
+</table>
 <h3>Constructors</h3>
 <table>
 <tbody>
@@ -18,7 +30,7 @@
 <p><a href="-init-.html">&lt;init&gt;</a></p>
 </td>
 <td>
-<code><span class="identifier">RepositoryCache</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.RepositoryCache$<init>(me.eater.emo.emo.RepositoryDefinition, kotlin.String, kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Links)/definition">definition</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.emo/-repository-definition/index.html"><span class="identifier">RepositoryDefinition</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.RepositoryCache$<init>(me.eater.emo.emo.RepositoryDefinition, kotlin.String, kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Links)/name">name</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.RepositoryCache$<init>(me.eater.emo.emo.RepositoryDefinition, kotlin.String, kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Links)/description">description</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;""<span class="symbol">, </span><span class="identifier" id="me.eater.emo.RepositoryCache$<init>(me.eater.emo.emo.RepositoryDefinition, kotlin.String, kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Links)/logo">logo</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="me.eater.emo.RepositoryCache$<init>(me.eater.emo.emo.RepositoryDefinition, kotlin.String, kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Links)/links">links</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.emo.dto.repository/-links/index.html"><span class="identifier">Links</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Links()<span class="symbol">)</span></code>
+<code><span class="identifier">RepositoryCache</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.RepositoryCache$<init>(me.eater.emo.emo.RepositoryDefinition, kotlin.String, kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Links, me.eater.emo.RepositoryCache.Status)/definition">definition</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.emo/-repository-definition/index.html"><span class="identifier">RepositoryDefinition</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.RepositoryCache$<init>(me.eater.emo.emo.RepositoryDefinition, kotlin.String, kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Links, me.eater.emo.RepositoryCache.Status)/name">name</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.RepositoryCache$<init>(me.eater.emo.emo.RepositoryDefinition, kotlin.String, kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Links, me.eater.emo.RepositoryCache.Status)/description">description</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;""<span class="symbol">, </span><span class="identifier" id="me.eater.emo.RepositoryCache$<init>(me.eater.emo.emo.RepositoryDefinition, kotlin.String, kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Links, me.eater.emo.RepositoryCache.Status)/logo">logo</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="me.eater.emo.RepositoryCache$<init>(me.eater.emo.emo.RepositoryDefinition, kotlin.String, kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Links, me.eater.emo.RepositoryCache.Status)/links">links</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.emo.dto.repository/-links/index.html"><span class="identifier">Links</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Links()<span class="symbol">, </span><span class="identifier" id="me.eater.emo.RepositoryCache$<init>(me.eater.emo.emo.RepositoryDefinition, kotlin.String, kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Links, me.eater.emo.RepositoryCache.Status)/status">status</span><span class="symbol">:</span>&nbsp;<a href="-status/index.html"><span class="identifier">RepositoryCache.Status</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Status.Ok<span class="symbol">)</span></code>
 <p>Repository cache</p>
 </td>
 </tr>
@@ -70,6 +82,15 @@
 <td>
 <code><span class="keyword">val </span><span class="identifier">name</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
 <p>Name of this repository</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="status.html">status</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">status</span><span class="symbol">: </span><a href="-status/index.html"><span class="identifier">RepositoryCache.Status</span></a></code>
+<p>Status of repository, filled after update</p>
 </td>
 </tr>
 </tbody>

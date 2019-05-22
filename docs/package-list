@@ -1,6 +1,7 @@
 $dokka.format:html
 $dokka.linkExtension:html
-
+$dokka.location:me.eater.emo.utils$await(com.github.kittinunf.fuel.core.Request, kotlin.coroutines.CoroutineContext)me.eater.emo.utils/com.github.kittinunf.fuel.core.-request/await.html
+$dokka.location:me.eater.emo.utils$awaitResponse(com.github.kittinunf.fuel.core.Request, kotlin.coroutines.CoroutineContext)me.eater.emo.utils/com.github.kittinunf.fuel.core.-request/await-response.html
 me.eater.emo
 me.eater.emo.emo
 me.eater.emo.emo.dto
@@ -11,6 +12,7 @@ me.eater.emo.forge.dto.manifest.v2
 me.eater.emo.forge.dto.promotions
 me.eater.emo.minecraft
 me.eater.emo.minecraft.dto.asset_index
+me.eater.emo.minecraft.dto.launcher
 me.eater.emo.minecraft.dto.manifest
 me.eater.emo.minecraft.dto.manifest.v18
 me.eater.emo.minecraft.dto.manifest.v21

@@ -18,7 +18,7 @@
 <p><a href="-init-.html">&lt;init&gt;</a></p>
 </td>
 <td>
-<code><span class="identifier">Profile</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.emo.Profile$<init>(kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion)/location">location</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.emo.Profile$<init>(kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion)/name">name</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.emo.Profile$<init>(kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion)/modpack">modpack</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.emo.dto.repository/-modpack/index.html"><span class="identifier">Modpack</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.emo.Profile$<init>(kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion)/modpackVersion">modpackVersion</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.emo.dto.repository/-modpack-version/index.html"><span class="identifier">ModpackVersion</span></a><span class="symbol">)</span></code>
+<code><span class="identifier">Profile</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.emo.Profile$<init>(kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, java.time.Instant, java.time.Instant)/location">location</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.emo.Profile$<init>(kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, java.time.Instant, java.time.Instant)/name">name</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.emo.Profile$<init>(kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, java.time.Instant, java.time.Instant)/modpack">modpack</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.emo.dto.repository/-modpack/index.html"><span class="identifier">Modpack</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.emo.Profile$<init>(kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, java.time.Instant, java.time.Instant)/modpackVersion">modpackVersion</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.emo.dto.repository/-modpack-version/index.html"><span class="identifier">ModpackVersion</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.emo.Profile$<init>(kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, java.time.Instant, java.time.Instant)/createdOn">createdOn</span><span class="symbol">:</span>&nbsp;<span class="identifier">Instant</span>&nbsp;<span class="symbol">=</span>&nbsp;Instant.MIN<span class="symbol">, </span><span class="identifier" id="me.eater.emo.emo.Profile$<init>(kotlin.String, kotlin.String, me.eater.emo.emo.dto.repository.Modpack, me.eater.emo.emo.dto.repository.ModpackVersion, java.time.Instant, java.time.Instant)/lastTouched">lastTouched</span><span class="symbol">:</span>&nbsp;<span class="identifier">Instant</span>&nbsp;<span class="symbol">=</span>&nbsp;if (createdOn == Instant.MIN) Instant.now() else createdOn<span class="symbol">)</span></code>
 <p>Class that holds info about a profile, used for serialisation</p>
 </td>
 </tr>
@@ -27,6 +27,24 @@
 <h3>Properties</h3>
 <table>
 <tbody>
+<tr>
+<td>
+<p><a href="created-on.html">createdOn</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">createdOn</span><span class="symbol">: </span><span class="identifier">Instant</span></code>
+<p>Time created</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="last-touched.html">lastTouched</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">lastTouched</span><span class="symbol">: </span><span class="identifier">Instant</span></code>
+<p>Time last touched</p>
+</td>
+</tr>
 <tr>
 <td>
 <p><a href="location.html">location</a></p>
