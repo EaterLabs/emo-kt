@@ -20,6 +20,7 @@ import java.net.Proxy
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.time.Instant
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
@@ -355,7 +356,7 @@ class EmoInstance {
      * This function is used by the install workflow
      */
     fun addProfile(modpack: Modpack, modpackVersion: ModpackVersion, location: String, name: String) {
-        val profile = Profile(location, name, modpack.withoutVersions(), modpackVersion)
+        val profile = Profile(location, name, modpack.withoutVersions(), modpackVersion, Instant.now())
         useSettings { settings -> settings.addProfile(profile) }
     }
 
