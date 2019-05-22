@@ -268,7 +268,7 @@ data class Profile(
     /**
      * Time last touched
      */
-    val lastTouched: Instant = if (createdOn == Instant.MIN) Instant.now() else createdOn
+    var lastTouched: Instant = if (createdOn == Instant.MIN) Instant.now() else createdOn
 ) {
     /**
      * Get [MinecraftExecutor] for this profile with [account]
