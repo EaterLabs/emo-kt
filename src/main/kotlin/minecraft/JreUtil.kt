@@ -5,7 +5,7 @@ import me.eater.emo.EmoInstance
 import me.eater.emo.minecraft.dto.launcher.LauncherArtifact
 import me.eater.emo.utils.await
 import me.eater.emo.utils.io
-import org.tukaani.xz.XZInputStream
+import org.tukaani.xz.LZMAInputStream
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -25,7 +25,7 @@ object JreUtil {
             .await()
 
         io {
-            val zip = ZipInputStream(XZInputStream(temp.inputStream().buffered()).buffered())
+            val zip = ZipInputStream(LZMAInputStream(temp.inputStream().buffered()).buffered())
             var entry = zip.nextEntry
 
             while (entry != null) {
