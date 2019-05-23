@@ -46,7 +46,7 @@ fun emoKlaxon() = Klaxon()
     .convert(Regex::class, {
         when (it.inside) {
             is JsonObject -> Regex(it.obj!!.get("pattern") as String)
-            is String -> Regex.fromLiteral(it.string!!)
+            is String -> Regex(it.string!!)
             else -> throw IllegalArgumentException()
         }
     }, { toJsonString(it.pattern) })
