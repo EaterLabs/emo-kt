@@ -274,4 +274,30 @@ data class Profile(
      * Get [MinecraftExecutor] for this profile with [account]
      */
     fun getExecutor(account: Account) = MinecraftExecutor(location, account)
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Profile
+
+        if (location != other.location) return false
+        if (name != other.name) return false
+        if (modpack != other.modpack) return false
+        if (modpackVersion != other.modpackVersion) return false
+        if (createdOn != other.createdOn) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = location.hashCode()
+        result = 31 * result + name.hashCode()
+        result = 31 * result + modpack.hashCode()
+        result = 31 * result + modpackVersion.hashCode()
+        result = 31 * result + createdOn.hashCode()
+        return result
+    }
+
+
 }
