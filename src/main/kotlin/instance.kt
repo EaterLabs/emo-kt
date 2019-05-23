@@ -355,9 +355,10 @@ class EmoInstance {
      * Add profile with given [modpack] and [modpackVersion] on [location] with [name] to settings.
      * This function is used by the install workflow
      */
-    fun addProfile(modpack: Modpack, modpackVersion: ModpackVersion, location: String, name: String) {
+    fun addProfile(modpack: Modpack, modpackVersion: ModpackVersion, location: String, name: String): Profile {
         val profile = Profile(location, name, modpack.withoutVersions(), modpackVersion, Instant.now())
         useSettings { settings -> settings.addProfile(profile) }
+        return profile
     }
 
     /**

@@ -1,6 +1,6 @@
 package me.eater.emo
 
-import me.eater.emo.emo.dto.Profile
+import me.eater.emo.emo.Profile
 import me.eater.emo.emo.dto.repository.Mod
 import me.eater.emo.emo.dto.repository.Modpack
 import me.eater.emo.emo.dto.repository.ModpackVersion

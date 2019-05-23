@@ -1,6 +1,5 @@
 package me.eater.emo.emo
 
-import com.github.kittinunf.fuel.coroutines.awaitByteArrayResponse
 import com.github.kittinunf.fuel.httpDownload
 import me.eater.emo.EmoContext
 import me.eater.emo.emo.dto.ClientLock
@@ -32,8 +31,6 @@ class CreateEmoProfile : Process<EmoContext> {
             context.selectedForgeVersion,
             context.mods
         )
-
-        context.profile = profile
 
         val path = Paths.get(context.installLocation.toString(), "emo.json")
 
@@ -138,12 +135,14 @@ class AddProfile : Process<EmoContext> {
     override fun getName() = "emo.add_profile"
     override fun getDescription() = "Adding profile to settings"
     override suspend fun execute(context: EmoContext) {
-        context.instance!!.addProfile(
+        val profile = context.instance!!.addProfile(
             context.modpack!!,
             context.modpackVersion!!,
             context.installLocation.toString(),
             context.name ?: context.modpack.name
         )
+
+        context.profile = profile
     }
 }
 
