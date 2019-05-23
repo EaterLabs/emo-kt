@@ -406,12 +406,12 @@ class EmoInstance {
     /**
      * Get a [MinecraftExecutor] for given [location] and [account]
      */
-    fun getMinecraftExecutor(location: String, account: Account) = MinecraftExecutor(location, account)
+    fun getMinecraftExecutor(location: String, account: Account, java: String = "java") = MinecraftExecutor(location, account, java)
 
     /**
      * Get a [MinecraftExecutor] for given [profile] and [account]
      */
-    fun getMinecraftExecutor(profile: Profile, account: Account) = getMinecraftExecutor(profile.location, account)
+    fun getMinecraftExecutor(profile: Profile, account: Account, java: String = "java") = getMinecraftExecutor(profile.location, account, java)
 
 
     suspend fun getAvailableJRE(environment: EmoEnvironment = EmoEnvironment()): LauncherArtifact? {

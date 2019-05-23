@@ -18,7 +18,7 @@ import java.nio.file.Paths
  * @param profileLocation Location of minecraft install
  * @param account Account to start minecraft with, may be null for a server
  */
-class MinecraftExecutor(val profileLocation: String, val account: Account? = null) {
+class MinecraftExecutor(val profileLocation: String, val account: Account? = null, val java: String = "java") {
     var process: Process? = null
 
     /**
@@ -85,7 +85,7 @@ class MinecraftExecutor(val profileLocation: String, val account: Account? = nul
                 )
 
                 listOf(
-                    listOf(launchOptions.java ?: "java"),
+                    listOf(launchOptions.java ?: java),
                     jvmArgs,
                     launchOptions.getJVMArgs().toList(),
                     listOf(clientLock.start!!.mainClass),
@@ -95,7 +95,7 @@ class MinecraftExecutor(val profileLocation: String, val account: Account? = nul
             Target.Server -> {
                 // -should- work
                 listOf(
-                    launchOptions.java ?: "java",
+                    launchOptions.java ?: java,
                     *launchOptions.getJVMArgs(),
                     "-jar",
                     when (profile.forge) {
