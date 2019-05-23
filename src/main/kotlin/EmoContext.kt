@@ -1,5 +1,6 @@
 package me.eater.emo
 
+import me.eater.emo.emo.dto.Profile
 import me.eater.emo.emo.dto.repository.Mod
 import me.eater.emo.emo.dto.repository.Modpack
 import me.eater.emo.emo.dto.repository.ModpackVersion
@@ -95,6 +96,11 @@ class EmoContext(
      * Queue for native libraries that should be extracted
      */
     val extractQueue: ArrayList<Pair<Artifact, Extract>> = arrayListOf()
+
+    /**
+     * The profile for this install
+     */
+    var profile: Profile? = null
 
     private var versionsManifest: VersionsManifest? = null
 

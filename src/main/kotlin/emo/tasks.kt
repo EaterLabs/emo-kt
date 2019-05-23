@@ -33,6 +33,8 @@ class CreateEmoProfile : Process<EmoContext> {
             context.mods
         )
 
+        context.profile = profile
+
         val path = Paths.get(context.installLocation.toString(), "emo.json")
 
         io {
