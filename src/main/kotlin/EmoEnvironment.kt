@@ -46,7 +46,7 @@ class EmoEnvironment {
             return false
         }
 
-        if (check.version !== null && !check.version.matches(osVersion)) {
+        if (check.version !== null && !check.version.containsMatchIn(osVersion)) {
             return false
         }
 
