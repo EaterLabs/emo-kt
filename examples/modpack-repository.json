@@ -1,0 +1,40 @@
+{
+  "name": "Eater's Modpack Collection",
+  "description": "ye",
+  "logo": "http://placekitten.com/200/200",
+  "modpacks": {
+    "eater/etckit": {
+      "name": "/etc/kit",
+      "logo": "http://placekitten.com/200/200",
+      "description": "A modpack focused on technological advancements",
+      "tags": [
+        "technical"
+      ],
+      "versions": {
+        "1.0.0": {
+          "channel": "stable",
+          "minecraft": "1.12.2",
+          "mods": [
+            {
+              "name": "blaat",
+              "url": "http://example.com"
+            }
+          ]
+        },
+        "0.0.1": {
+          "channel": "beta",
+          "minecraft": "1.12.1",
+          "forge": "1231533.123134",
+          "mods": []
+        },
+        "1.2": {
+          "channel": "stable",
+          "minecraft": "1.13.2",
+          "mods": [
+
+          ]
+        }
+      }
+    }
+  }
+}

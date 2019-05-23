@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VersionSelector - emo</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">emo</a>&nbsp;/&nbsp;<a href="../index.html">me.eater.emo</a>&nbsp;/&nbsp;<a href="./index.html">VersionSelector</a><br/>
+<br/>
+<h1>VersionSelector</h1>
+<code><span class="keyword">class </span><span class="identifier">VersionSelector</span></code>
+<p>Version selector class, used to wrap a static or dynamic version</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">VersionSelector</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.VersionSelector$<init>(kotlin.String)/selector">selector</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span></code>
+<p>Version selector class, used to wrap a static or dynamic version</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="selector.html">selector</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">selector</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="is-static.html">isStatic</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">isStatic</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>Returns true if version wrapped is absolute/static (e.g.: 1.2.3), false if non-static (e.g. latest)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Companion Object Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-f-o-r-g-e_-l-a-t-e-s-t.html">FORGE_LATEST</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">FORGE_LATEST</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">VersionSelector</span></a></code>
+<p>Version selector for latest Forge version available</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-f-o-r-g-e_-r-e-c-o-m-m-e-n-d-e-d.html">FORGE_RECOMMENDED</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">FORGE_RECOMMENDED</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">VersionSelector</span></a></code>
+<p>Version selector for recommended Forge version</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-m-i-n-e-c-r-a-f-t_-l-a-t-e-s-t.html">MINECRAFT_LATEST</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">MINECRAFT_LATEST</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">VersionSelector</span></a></code>
+<p>Version selector for latest minecraft version available</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-m-i-n-e-c-r-a-f-t_-l-a-t-e-s-t_-s-n-a-p-s-h-o-t.html">MINECRAFT_LATEST_SNAPSHOT</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">MINECRAFT_LATEST_SNAPSHOT</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">VersionSelector</span></a></code>
+<p>Version selector for latest minecraft snapshot available</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Companion Object Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="from-string-or-null.html">fromStringOrNull</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">fromStringOrNull</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.VersionSelector.Companion$fromStringOrNull(kotlin.String)/selector">selector</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">VersionSelector</span></a><span class="symbol">?</span></code>
+<p>Return version selector from String or null given, return null</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

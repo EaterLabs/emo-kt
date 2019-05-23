@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>EmoEnvironment - emo</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">emo</a>&nbsp;/&nbsp;<a href="../index.html">me.eater.emo</a>&nbsp;/&nbsp;<a href="./index.html">EmoEnvironment</a><br/>
+<br/>
+<h1>EmoEnvironment</h1>
+<code><span class="keyword">class </span><span class="identifier">EmoEnvironment</span></code>
+<p>Holds checks and data about the current environment, which is used for selecting the correct libraries and natives</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">EmoEnvironment</span><span class="symbol">(</span><span class="symbol">)</span></code>
+<p>Holds checks and data about the current environment, which is used for selecting the correct libraries and natives</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="os-arch.html">osArch</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">osArch</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>Normalized OS architecture for this environment</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="os-name.html">osName</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">osName</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>Normalized OS name for this environment</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="passes-o-s-check.html">passesOSCheck</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">passesOSCheck</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.EmoEnvironment$passesOSCheck(me.eater.emo.minecraft.dto.manifest.OS)/check">check</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.minecraft.dto.manifest/-o-s/index.html"><span class="identifier">OS</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>Check if this environment passes the given OS check, returns true on pass, false on fail</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="passes-rule.html">passesRule</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">passesRule</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.EmoEnvironment$passesRule(me.eater.emo.minecraft.dto.manifest.Rule)/rule">rule</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.minecraft.dto.manifest/-rule/index.html"><span class="identifier">Rule</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>Check if this environment passes the given <a href="passes-rule.html#me.eater.emo.EmoEnvironment$passesRule(me.eater.emo.minecraft.dto.manifest.Rule)/rule">rule</a>, returns true on pass, false on fail</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="passes-rules.html">passesRules</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">passesRules</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.EmoEnvironment$passesRules(kotlin.collections.Iterable((me.eater.emo.minecraft.dto.manifest.Rule)))/rules">rules</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/index.html"><span class="identifier">Iterable</span></a><span class="symbol">&lt;</span><a href="../../me.eater.emo.minecraft.dto.manifest/-rule/index.html"><span class="identifier">Rule</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>Check if this environment passes the given <a href="passes-rules.html#me.eater.emo.EmoEnvironment$passesRules(kotlin.collections.Iterable((me.eater.emo.minecraft.dto.manifest.Rule)))/rules">rules</a>, returns true on pass, false on fail</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="select-native.html">selectNative</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">selectNative</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.EmoEnvironment$selectNative(me.eater.emo.minecraft.dto.manifest.Library)/library">library</span><span class="symbol">:</span>&nbsp;<a href="../../me.eater.emo.minecraft.dto.manifest/-library/index.html"><span class="identifier">Library</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../../me.eater.emo.minecraft.dto.manifest/-artifact/index.html"><span class="identifier">Artifact</span></a><span class="symbol">?</span></code>
+<p>Select if there is a native artifact that we should select in this <a href="select-native.html#me.eater.emo.EmoEnvironment$selectNative(me.eater.emo.minecraft.dto.manifest.Library)/library">library</a>,
+Returns the native artifact if found</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

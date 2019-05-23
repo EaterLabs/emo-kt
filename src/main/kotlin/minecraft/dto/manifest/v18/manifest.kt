@@ -3,6 +3,7 @@ package me.eater.emo.minecraft.dto.manifest.v18
 import com.beust.klaxon.Converter
 import com.beust.klaxon.JsonValue
 import com.beust.klaxon.Klaxon
+import me.eater.emo.emo.DEFAULT_JVM_ARGUMENTS
 import me.eater.emo.minecraft.dto.manifest.*
 
 private fun <T> Klaxon.convert(
@@ -35,14 +36,13 @@ data class Manifest(
     val time: String,
     override val type: String
 ) : IManifest {
-    override fun getJVMArguments(): List<Argument> {
+    override fun getJVMArguments(): List<Argument> =
+        DEFAULT_JVM_ARGUMENTS
+
+    override fun getGameArguments(): List<Argument> {
         return listOf(
             Argument(listOf(), minecraftArguments.split("\\s+"))
         )
-    }
-
-    override fun getGameArguments(): List<Argument> {
-        return listOf()
     }
 
     override fun getLibraries(): Iterable<Library> = libraries

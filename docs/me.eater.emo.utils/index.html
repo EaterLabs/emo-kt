@@ -1,0 +1,149 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>me.eater.emo.utils - emo</title>
+<link rel="stylesheet" href="../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">emo</a>&nbsp;/&nbsp;<a href="./index.html">me.eater.emo.utils</a><br/>
+<br/>
+<h2>Package me.eater.emo.utils</h2>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-event/index.html">Event</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">Event</span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/index.html"><span class="identifier">Iterable</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/-mutable-entry/index.html"><span class="identifier">MutableEntry</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<span class="keyword">suspend </span><span class="symbol">(</span><a href="-event/index.html#T"><span class="identifier">T</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Simple class that can hold callbacks for events</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-noop/index.html">Noop</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">Noop</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-process/index.html"><span class="identifier">Process</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span></code>
+<p>Noop process, useful when only routing is needed</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-noop-deserializer/index.html">NoopDeserializer</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">NoopDeserializer</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">Deserializable</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-process/index.html">Process</a></p>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">Process</span><span class="symbol">&lt;</span><span class="keyword">in</span>&nbsp;<span class="identifier">C</span><span class="symbol">&gt;</span></code>
+<p>Process interface</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-process-chain/index.html">ProcessChain</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">ProcessChain</span><span class="symbol">&lt;</span><span class="identifier">C</span><span class="symbol">&gt;</span></code>
+<p>Process chain, contains the name of the <a href="-process-chain/process.html">process</a>, the router, the name of this step and the description of this step</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-process-started-event/index.html">ProcessStartedEvent</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">ProcessStartedEvent</span><span class="symbol">&lt;</span><span class="identifier">C</span><span class="symbol">&gt;</span></code>
+<p>Event that is executed when a new process is started in a workflow</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-router/index.html">Router</a></p>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">Router</span><span class="symbol">&lt;</span><span class="identifier">C</span><span class="symbol">&gt;</span></code>
+<p>Used to select the next step in a workflow</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-static-router/index.html">StaticRouter</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">StaticRouter</span><span class="symbol">&lt;</span><span class="identifier">C</span><span class="symbol">&gt;</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-router/index.html"><span class="identifier">Router</span></a><span class="symbol">&lt;</span><a href="-static-router/index.html#C"><span class="identifier">C</span></a><span class="symbol">&gt;</span></code>
+<p><a href="-router/index.html">Router</a> that always returns the same result</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-workflow/index.html">Workflow</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">Workflow</span><span class="symbol">&lt;</span><span class="identifier">C</span><span class="symbol">&gt;</span></code>
+<p>Workflow object</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-workflow-builder/index.html">WorkflowBuilder</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">WorkflowBuilder</span><span class="symbol">&lt;</span><span class="identifier">C</span><span class="symbol">&gt;</span></code>
+<p>Workflow builder, used to create a new workflow</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-workflow-event/index.html">WorkflowEvent</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">WorkflowEvent</span><span class="symbol">&lt;</span><span class="identifier">C</span><span class="symbol">&gt;</span></code>
+<p>Generic workflow event</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Extensions for External Classes</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="com.github.kittinunf.fuel.core.-request/index.html">com.github.kittinunf.fuel.core.Request</a></p>
+</td>
+<td>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="io.html">io</a></p>
+</td>
+<td>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <span class="identifier">io</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.utils$io(kotlinx.coroutines.CoroutineStart, kotlin.coroutines.SuspendFunction1((kotlinx.coroutines.CoroutineScope, me.eater.emo.utils.io.T)))/start">start</span><span class="symbol">:</span>&nbsp;<span class="identifier">CoroutineStart</span>&nbsp;<span class="symbol">=</span>&nbsp;CoroutineStart.DEFAULT<span class="symbol">, </span><span class="identifier" id="me.eater.emo.utils$io(kotlinx.coroutines.CoroutineStart, kotlin.coroutines.SuspendFunction1((kotlinx.coroutines.CoroutineScope, me.eater.emo.utils.io.T)))/block">block</span><span class="symbol">:</span>&nbsp;<span class="keyword">suspend </span><span class="identifier">CoroutineScope</span><span class="symbol">.</span><span class="symbol">(</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="io.html#T"><span class="identifier">T</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="io.html#T"><span class="identifier">T</span></a></code>
+<p>Run function on IO thread</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="parallel.html">parallel</a></p>
+</td>
+<td>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <span class="identifier">parallel</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.utils$parallel(kotlin.collections.Iterable((me.eater.emo.utils.parallel.T)), kotlin.Int, kotlin.coroutines.SuspendFunction1((me.eater.emo.utils.parallel.T, kotlin.Unit)))/items">items</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/index.html"><span class="identifier">Iterable</span></a><span class="symbol">&lt;</span><a href="parallel.html#T"><span class="identifier">T</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="me.eater.emo.utils$parallel(kotlin.collections.Iterable((me.eater.emo.utils.parallel.T)), kotlin.Int, kotlin.coroutines.SuspendFunction1((me.eater.emo.utils.parallel.T, kotlin.Unit)))/parallel">parallel</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a>&nbsp;<span class="symbol">=</span>&nbsp;10<span class="symbol">, </span><span class="identifier" id="me.eater.emo.utils$parallel(kotlin.collections.Iterable((me.eater.emo.utils.parallel.T)), kotlin.Int, kotlin.coroutines.SuspendFunction1((me.eater.emo.utils.parallel.T, kotlin.Unit)))/call">call</span><span class="symbol">:</span>&nbsp;<span class="keyword">suspend </span><span class="symbol">(</span><a href="parallel.html#T"><span class="identifier">T</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>like .forEach but in parallel, amount of processes is determined by <a href="parallel.html#me.eater.emo.utils$parallel(kotlin.collections.Iterable((me.eater.emo.utils.parallel.T)), kotlin.Int, kotlin.coroutines.SuspendFunction1((me.eater.emo.utils.parallel.T, kotlin.Unit)))/parallel">parallel</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

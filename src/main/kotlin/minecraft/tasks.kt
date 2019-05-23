@@ -3,10 +3,11 @@ package me.eater.emo.minecraft
 import com.beust.klaxon.Klaxon
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.requests.download
+import com.github.kittinunf.fuel.coroutines.awaitByteArrayResponse
+import com.github.kittinunf.fuel.coroutines.awaitString
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.github.kittinunf.fuel.httpDownload
 import com.github.kittinunf.fuel.httpGet
-import kotlinx.coroutines.*
 import me.eater.emo.EmoContext
 import me.eater.emo.Target
 import me.eater.emo.minecraft.dto.asset_index.AssetIndex
@@ -14,6 +15,7 @@ import me.eater.emo.minecraft.dto.manifest.Artifact
 import me.eater.emo.minecraft.dto.manifest.parseManifest
 import me.eater.emo.minecraft.dto.minecraft_versions.VersionsManifest
 import me.eater.emo.utils.Process
+import me.eater.emo.utils.await
 import me.eater.emo.utils.io
 import me.eater.emo.utils.parallel
 import java.io.File
@@ -25,19 +27,27 @@ import java.util.jar.JarFile
 const val MINECRAFT_VERSIONS_MANIFEST = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
 const val MINECRAFT_ASSESTS_HOST_URL = "https://resources.download.minecraft.net/"
 
+/**
+ * Process that fetches version manifest
+ */
 class FetchVersionsManifest : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_versions"
+    override fun getDescription() = "Fetching version manifest from Mojang"
 
     override suspend fun execute(context: EmoContext) {
-        val (_, _, result) = Fuel.get(MINECRAFT_VERSIONS_MANIFEST)
-            .awaitStringResponseResult()
+        val result = Fuel.get(MINECRAFT_VERSIONS_MANIFEST)
+            .awaitString()
 
-        context.setVersionsManifest(Klaxon().parse<VersionsManifest>(result.get())!!)
+        context.setVersionsManifest(Klaxon().parse<VersionsManifest>(result)!!)
     }
 }
 
+/**
+ * Process that selects which Minecraft version to install
+ */
 class SelectMinecraftVersion : Process<EmoContext> {
     override fun getName() = "minecraft.select_version"
+    override fun getDescription() = "Selecting Minecraft version to install"
 
     override suspend fun execute(context: EmoContext) {
         val selected: String = when {
@@ -59,36 +69,44 @@ class SelectMinecraftVersion : Process<EmoContext> {
     }
 }
 
+/**
+ * Process that will download the install manifest for selected minecraft version
+ */
 class FetchMinecraftManifest : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_manifest"
+    override fun getDescription() = "Fetching Minecraft install manifest"
 
     override suspend fun execute(context: EmoContext) {
 
-        val (_, _, result) = Fuel.get(context.selectedMinecraftVersion!!.url)
-            .awaitStringResponseResult()
+        val result = Fuel.get(context.selectedMinecraftVersion!!.url)
+            .awaitString()
 
-        val manifest = parseManifest(result.get())
+        val manifest = parseManifest(result)
         context.minecraftManifest = manifest
 
         io {
             val path = Paths.get(context.installLocation.toString(), ".emo/minecraft.json")
             Files.createDirectories(path.parent)
-            path.toFile().writeText(result.get())
+            path.toFile().writeText(result)
         }
     }
 }
 
+/**
+ * Process that will download libraries for selected minecraft version
+ */
 class FetchMinecraftLibraries : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_libraries"
+    override fun getDescription() = "Fetching libraries for Minecraft"
 
     override suspend fun execute(context: EmoContext) {
-        parallel(context.minecraftManifest!!.getLibraries().filter { context.profile.passesRules(it.rules) }) {
+        parallel(context.minecraftManifest!!.getLibraries().filter { context.environment.passesRules(it.rules) }) {
 
             if (it.downloads.artifact !== null) {
                 download(context, it.downloads.artifact)
             }
 
-            val native = context.profile.selectNative(it)
+            val native = context.environment.selectNative(it)
             if (native !== null) {
                 download(context, native)
                 context.extractQueue.add(Pair(native, it.extract))
@@ -96,7 +114,7 @@ class FetchMinecraftLibraries : Process<EmoContext> {
         }
     }
 
-    private fun download(ctx: EmoContext, artifact: Artifact) {
+    private suspend fun download(ctx: EmoContext, artifact: Artifact) {
         val path: Path = Paths.get(ctx.installLocation.toString(), "libraries", artifact.path)
 
         if (Files.exists(path)) return
@@ -107,13 +125,16 @@ class FetchMinecraftLibraries : Process<EmoContext> {
             .httpGet()
             .download()
             .fileDestination { _, _ -> File(path.toUri()) }
-            .response { _ -> }
-            .join()
+            .await()
     }
 }
 
+/**
+ * Process that will extract native libraries for current minecraft install
+ */
 class ExtractNatives : Process<EmoContext> {
     override fun getName() = "minecraft.extract_natives"
+    override fun getDescription() = "Extracting Native libraries for Minecraft"
 
     override suspend fun execute(context: EmoContext) {
         io {
@@ -150,15 +171,19 @@ class ExtractNatives : Process<EmoContext> {
     }
 }
 
+/**
+ * Process that fetches the asset index for this minecraft install
+ */
 class FetchMinecraftAssetIndex : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_assets_index"
+    override fun getDescription() = "Fetching asset index"
 
     override suspend fun execute(context: EmoContext) {
-        val (_, _, result) = context.minecraftManifest!!.getAssetIndexUrl()
+        val result = context.minecraftManifest!!.getAssetIndexUrl()
             .httpGet()
-            .awaitStringResponseResult()
+            .awaitString()
 
-        val index = AssetIndex.fromJson(result.get())
+        val index = AssetIndex.fromJson(result)
         context.assetIndex = index
 
         io {
@@ -168,13 +193,17 @@ class FetchMinecraftAssetIndex : Process<EmoContext> {
                 context.minecraftManifest!!.getAssetIndexId() + ".json"
             )
             Files.createDirectories(assetIndexPath.parent)
-            assetIndexPath.toFile().writeText(result.get())
+            assetIndexPath.toFile().writeText(result)
         }
     }
 }
 
+/**
+ * Process that fetches all assets for the current asset index
+ */
 class FetchMinecraftAssets : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_assets"
+    override fun getDescription() = "Downloading assests for Minecraft"
 
     override suspend fun execute(context: EmoContext) {
         parallel(context.assetIndex!!.objects.entries, 20) {
@@ -188,14 +217,17 @@ class FetchMinecraftAssets : Process<EmoContext> {
             (MINECRAFT_ASSESTS_HOST_URL + assetId)
                 .httpDownload()
                 .fileDestination { _, _ -> path.toFile() }
-                .response { _ -> }
-                .join()
+                .awaitByteArrayResponse()
         }
     }
 }
 
+/**
+ * Process that fetches the minecraft jar for the current install
+ */
 class FetchMinecraftJar : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_jar"
+    override fun getDescription() = "Fetching Minecraft executable"
 
     override suspend fun execute(context: EmoContext) {
         val (path, url) = when {
@@ -213,7 +245,6 @@ class FetchMinecraftJar : Process<EmoContext> {
         url
             .httpDownload()
             .fileDestination { _, _ -> Paths.get(context.installLocation.toString(), path).toFile() }
-            .response { _ -> }
-            .join()
+            .awaitByteArrayResponse()
     }
 }

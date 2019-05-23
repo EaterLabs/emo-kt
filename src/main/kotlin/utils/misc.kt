@@ -1,21 +1,34 @@
 package me.eater.emo.utils
 
+import com.github.kittinunf.fuel.core.Deserializable
+import com.github.kittinunf.fuel.core.Request
+import com.github.kittinunf.fuel.core.Response
+import com.github.kittinunf.fuel.core.ResponseOf
+import com.github.kittinunf.fuel.core.deserializers.ByteArrayDeserializer
+import com.github.kittinunf.fuel.coroutines.await
+import com.github.kittinunf.fuel.coroutines.awaitObjectResponse
+import com.github.kittinunf.fuel.coroutines.awaitResponse
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
+import kotlin.coroutines.CoroutineContext
 
-suspend fun io(
+/**
+ * Run function on IO thread
+ */
+suspend fun <T>io(
     start: CoroutineStart = CoroutineStart.DEFAULT,
-    block: suspend CoroutineScope.() -> Unit
-) {
-    GlobalScope.launch(Dispatchers.IO, start, block).join()
-}
+    block: suspend CoroutineScope.() -> T
+): T = GlobalScope.async(Dispatchers.IO, start, block).await()
 
-suspend fun <T> parallel(items: Iterable<T>, parallel: Int = 10, call: (input: T) -> Unit) {
+/**
+ * like .forEach but in parallel, amount of processes is determined by [parallel]
+ */
+suspend fun <T> parallel(items: Iterable<T>, parallel: Int = 10, call: suspend (T) -> Unit) {
     val channel = Channel<T>()
-    val jobs = arrayListOf<Job>()
+    val jobs = arrayListOf<Deferred<Unit>>()
 
     repeat(parallel) {
-        jobs.add(GlobalScope.launch {
+        jobs.add(GlobalScope.async {
             for (item in channel) {
                 call(item)
             }
@@ -27,32 +40,15 @@ suspend fun <T> parallel(items: Iterable<T>, parallel: Int = 10, call: (input: T
     }
 
     channel.close()
-    jobs.joinAll()
+    jobs.awaitAll()
 }
 
-fun <T> slice(items: List<T>, from: Int = 0, to: Int = items.size): List<T> {
-    val realTo = when {
-        to < 0 -> items.size + to
-        to <= items.size -> to
-        else -> throw IllegalArgumentException()
-    }
-
-
-    val realFrom = when {
-        from < 0 -> items.size + from
-        from <= items.size -> from
-        else -> throw IllegalArgumentException()
-    }
-
-    if (from < to) {
-        throw IllegalArgumentException()
-    }
-
-    return (realFrom until realTo).map {
-        items[it]
-    }
+class NoopDeserializer : Deserializable<Unit> {
+    override fun deserialize(response: Response) = Unit
 }
 
-fun <T> slice(items: Array<T>, from: Int = 0, to: Int = items.size): List<T> {
-    return slice(items.toList(), from, to)
-}
+suspend inline fun Request.await(scope: CoroutineContext = Dispatchers.IO) =
+    await(NoopDeserializer(), scope)
+
+suspend inline fun Request.awaitResponse(scope: CoroutineContext = Dispatchers.IO): ResponseOf<Unit> =
+    awaitResponse(NoopDeserializer(), scope)

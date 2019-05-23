@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ModpackVersion - emo</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">emo</a>&nbsp;/&nbsp;<a href="../index.html">me.eater.emo.emo.dto.repository</a>&nbsp;/&nbsp;<a href="./index.html">ModpackVersion</a><br/>
+<br/>
+<h1>ModpackVersion</h1>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">ModpackVersion</span></code>
+<p>A version of modpack</p>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-channel/index.html">Channel</a></p>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">Channel</span></code>
+<p>Channels for a modpack version, only 3 defined right now: release, beta, and alpha</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">ModpackVersion</span><span class="symbol">(</span><span class="identifier" id="me.eater.emo.emo.dto.repository.ModpackVersion$<init>(kotlin.String, me.eater.emo.emo.dto.repository.ModpackVersion.Channel, kotlin.collections.List((me.eater.emo.emo.dto.repository.Mod)), kotlin.String, kotlin.String, kotlin.String)/version">version</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.emo.dto.repository.ModpackVersion$<init>(kotlin.String, me.eater.emo.emo.dto.repository.ModpackVersion.Channel, kotlin.collections.List((me.eater.emo.emo.dto.repository.Mod)), kotlin.String, kotlin.String, kotlin.String)/channel">channel</span><span class="symbol">:</span>&nbsp;<a href="-channel/index.html"><span class="identifier">ModpackVersion.Channel</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Channel.Release<span class="symbol">, </span><span class="identifier" id="me.eater.emo.emo.dto.repository.ModpackVersion$<init>(kotlin.String, me.eater.emo.emo.dto.repository.ModpackVersion.Channel, kotlin.collections.List((me.eater.emo.emo.dto.repository.Mod)), kotlin.String, kotlin.String, kotlin.String)/mods">mods</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../-mod/index.html"><span class="identifier">Mod</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="me.eater.emo.emo.dto.repository.ModpackVersion$<init>(kotlin.String, me.eater.emo.emo.dto.repository.ModpackVersion.Channel, kotlin.collections.List((me.eater.emo.emo.dto.repository.Mod)), kotlin.String, kotlin.String, kotlin.String)/message">message</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;""<span class="symbol">, </span><span class="identifier" id="me.eater.emo.emo.dto.repository.ModpackVersion$<init>(kotlin.String, me.eater.emo.emo.dto.repository.ModpackVersion.Channel, kotlin.collections.List((me.eater.emo.emo.dto.repository.Mod)), kotlin.String, kotlin.String, kotlin.String)/minecraft">minecraft</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="me.eater.emo.emo.dto.repository.ModpackVersion$<init>(kotlin.String, me.eater.emo.emo.dto.repository.ModpackVersion.Channel, kotlin.collections.List((me.eater.emo.emo.dto.repository.Mod)), kotlin.String, kotlin.String, kotlin.String)/forge">forge</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">)</span></code>
+<p>A version of modpack</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="channel.html">channel</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">channel</span><span class="symbol">: </span><a href="-channel/index.html"><span class="identifier">ModpackVersion.Channel</span></a></code>
+<p>Which channel this version is released</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="forge.html">forge</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">forge</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="message.html">message</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">message</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="minecraft.html">minecraft</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">minecraft</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="mods.html">mods</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">mods</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../-mod/index.html"><span class="identifier">Mod</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="version.html">version</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">version</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>Version string, MUST be SemVer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
