@@ -9,6 +9,7 @@ import org.tukaani.xz.LZMAInputStream
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
 object JreUtil {
@@ -26,13 +27,18 @@ object JreUtil {
 
         io {
             val zip = ZipInputStream(LZMAInputStream(temp.inputStream().buffered()).buffered())
-            var entry = zip.nextEntry
+            var entry: ZipEntry? = null
 
-            while (entry != null) {
-                val path = "$target/${entry.name}"
-                if (entry.isDirectory) {
+            fun nextEntry(): Boolean {
+                entry = zip.nextEntry
+                return entry != null
+            }
+
+            while (nextEntry()) {
+                val thisEntry = entry!!
+                val path = "$target/${thisEntry.name}"
+                if (thisEntry.isDirectory) {
                     Files.createDirectories(Paths.get(path))
-
                     continue
                 }
 
@@ -40,11 +46,10 @@ object JreUtil {
                 zip.buffered().copyTo(outputStream)
                 zip.closeEntry()
                 outputStream.close()
-
-                entry = zip.nextEntry
             }
 
             zip.close()
+            temp.delete()
         }
     }
 }
