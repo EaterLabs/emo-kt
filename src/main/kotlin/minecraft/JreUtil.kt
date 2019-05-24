@@ -3,6 +3,7 @@ package me.eater.emo.minecraft
 import com.github.kittinunf.fuel.httpDownload
 import me.eater.emo.EmoInstance
 import me.eater.emo.minecraft.dto.launcher.LauncherArtifact
+import me.eater.emo.utils.ZipUtil
 import me.eater.emo.utils.await
 import me.eater.emo.utils.io
 import org.tukaani.xz.LZMAInputStream
@@ -25,36 +26,12 @@ object JreUtil {
             .fileDestination { _, _ -> temp }
             .await()
 
-        io {
-            val zip = ZipInputStream(LZMAInputStream(temp.inputStream().buffered()).buffered())
-            var entry: ZipEntry? = null
-
-            fun nextEntry(): Boolean {
-                entry = zip.nextEntry
-                return entry != null
+        ZipUtil.unpack(temp, target) { file, thisEntry ->
+            if (thisEntry.name.startsWith("bin/")) {
+                file.setExecutable(true)
             }
-
-            while (nextEntry()) {
-                val thisEntry = entry!!
-                val path = "$target/${thisEntry.name}"
-                if (thisEntry.isDirectory) {
-                    Files.createDirectories(Paths.get(path))
-                    continue
-                }
-
-                val outputStream = File(path).outputStream()
-                zip.buffered().copyTo(outputStream)
-                zip.closeEntry()
-                outputStream.close()
-
-                if (thisEntry.name.startsWith("bin/")) {
-                    File(path).setExecutable(true)
-                }
-
-            }
-
-            zip.close()
-            temp.delete()
         }
+
+        temp.delete()
     }
 }

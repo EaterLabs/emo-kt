@@ -64,7 +64,11 @@ class EmoContext(
     /**
      * Name used for this install, used in profile creation
      */
-    val name: String? = null
+    val name: String? = null,
+    /**
+     * Overlay used to distribute resource packs and configs
+     */
+    val overlay: String? = modpackVersion?.overlay
 ) {
     /**
      * Holds Forge manifest, if available

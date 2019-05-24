@@ -1,10 +1,7 @@
 package me.eater.emo
 
 import kotlinx.coroutines.runBlocking
-import me.eater.emo.emo.AddProfile
-import me.eater.emo.emo.CreateEmoClientLock
-import me.eater.emo.emo.CreateEmoProfile
-import me.eater.emo.emo.FetchMods
+import me.eater.emo.emo.*
 import me.eater.emo.forge.*
 import me.eater.emo.minecraft.*
 import me.eater.emo.utils.Noop
@@ -45,6 +42,7 @@ fun getInstallWorkflow(ctx: EmoContext): Workflow<EmoContext> {
         bind(CreateEmoClientLock())
         bind(FetchMods())
         bind(AddProfile())
+        bind(RunOverlay())
 
         // Misc
         bind(Noop())
@@ -77,7 +75,7 @@ fun getInstallWorkflow(ctx: EmoContext): Workflow<EmoContext> {
         step("minecraft.fetch_assets", "minecraft.fetch_jar")
         step("minecraft.fetch_jar", {
             when {
-                ctx.forgeVersion === null -> "emo.create_profile"
+                ctx.forgeVersion === null -> "emo.post_actions"
                 else -> "forge.fetch_versions"
             }
         })
@@ -102,7 +100,14 @@ fun getInstallWorkflow(ctx: EmoContext): Workflow<EmoContext> {
         step("forge.v2.extract_manifest", "forge.v2.clean_installer")
         step("forge.v2.clean_installer", "emo.fetch_mods")
 
-        step("emo.fetch_mods", "emo.create_profile")
+        step("emo.fetch_mods", "emo.post_actions")
+        step("noop", {
+            if (it.overlay == null)
+                "emo.create_profile"
+            else
+                "emo.run_overlay"
+        }, name = "emo.post_actions", description = "Running post-processing actions")
+        step("emo.run_overlay", "emo.create_profile")
         step("emo.create_profile", { if (it.target == Target.Client) "emo.create_client_lock" else null })
         step(
             "emo.create_client_lock",

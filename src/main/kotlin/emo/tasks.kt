@@ -1,5 +1,6 @@
 package me.eater.emo.emo
 
+import com.beust.klaxon.Klaxon
 import com.github.kittinunf.fuel.httpDownload
 import me.eater.emo.EmoContext
 import me.eater.emo.emo.dto.ClientLock
@@ -7,13 +8,12 @@ import me.eater.emo.emo.dto.Profile
 import me.eater.emo.emo.dto.StartLock
 import me.eater.emo.minecraft.dto.manifest.Argument
 import me.eater.emo.minecraft.dto.manifest.emoKlaxon
-import me.eater.emo.utils.Process
-import me.eater.emo.utils.await
-import me.eater.emo.utils.io
-import me.eater.emo.utils.parallel
+import me.eater.emo.utils.*
 import net.swiftzer.semver.SemVer
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.zip.ZipFile
 
 
 /**
@@ -163,5 +163,40 @@ class FetchMods : Process<EmoContext> {
                 .await()
         }
 
+    }
+}
+
+class RunOverlay : Process<EmoContext> {
+    override fun getName() = "emo.run_overlay"
+    override fun getDescription() = "Extracting overlay"
+    override suspend fun execute(context: EmoContext) {
+        val path = Paths.get(context.installLocation.toString(), "overlay.zip")
+
+        context.overlay!!
+            .httpDownload()
+            .fileDestination { _, _ -> path.toFile() }
+            .await()
+
+        val zipFile = ZipFile(path.toFile())
+        val overlayRulesFile = zipFile.getEntry(".emo/overlay.json")
+
+
+        val overlayRules: Map<String, String> = if (overlayRulesFile != null) {
+            Klaxon().parse(zipFile.getInputStream(overlayRulesFile).reader().readText()) ?: mapOf()
+        } else mapOf()
+
+        ZipUtil.unpack(path.toFile(), context.installLocation.toString(), before@{
+            if (it.isDirectory) {
+                return@before true
+            }
+
+            if (it.name == ".emo/overlay.json") {
+                return@before false
+            }
+
+            val rule = overlayRules[it.name] ?: "overwrite"
+            val targetPath = "${context.installLocation}/${it.name}"
+            return@before !(File(targetPath).exists() && rule == "keep")
+        })
     }
 }

@@ -126,6 +126,11 @@
               "type": "string"
             }
           ]
+        },
+        "overlay": {
+          "description": "An url to a zip containing an overlay over the profile directory, use this for config files, resource packs or texture packs",
+          "default": null,
+          "type": "string"
         }
       },
       "required": [

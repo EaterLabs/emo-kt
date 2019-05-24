@@ -141,7 +141,8 @@ data class ModpackVersion(
     val mods: List<Mod>,
     val message: String = "",
     val minecraft: String,
-    val forge: String? = null
+    val forge: String? = null,
+    val overlay: String? = null
 ) {
 
     /**
