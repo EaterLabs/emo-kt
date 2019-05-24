@@ -41,6 +41,10 @@ object JreUtil {
                 zip.closeEntry()
                 outputStream.close()
 
+                if (entry.name.startsWith("bin/")) {
+                    File(path).setExecutable(true)
+                }
+
                 entry = zip.nextEntry
             }
 
