@@ -26,7 +26,7 @@ object JreUtil {
             .fileDestination { _, _ -> temp }
             .await()
 
-        ZipUtil.unpack(temp, target) { file, thisEntry ->
+        ZipUtil.unpack(LZMAInputStream(temp.inputStream().buffered()).buffered(), target) { file, thisEntry ->
             if (thisEntry.name.startsWith("bin/")) {
                 file.setExecutable(true)
             }

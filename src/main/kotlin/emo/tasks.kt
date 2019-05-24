@@ -185,7 +185,7 @@ class RunOverlay : Process<EmoContext> {
             Klaxon().parse(zipFile.getInputStream(overlayRulesFile).reader().readText()) ?: mapOf()
         } else mapOf()
 
-        ZipUtil.unpack(path.toFile(), context.installLocation.toString(), before@{
+        ZipUtil.unpack(path.toFile().inputStream().buffered(), context.installLocation.toString(), before@{
             if (it.isDirectory) {
                 return@before true
             }

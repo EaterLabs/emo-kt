@@ -2,15 +2,16 @@ package me.eater.emo.utils
 
 import org.tukaani.xz.LZMAInputStream
 import java.io.File
+import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
 object ZipUtil {
-    suspend fun unpack(zip: File, target: String, beforeFile: (ZipEntry) -> Boolean = { true }, afterFile: (File, ZipEntry) -> Unit = { _, _ ->}) {
+    suspend fun unpack(inputStream: InputStream, target: String, beforeFile: (ZipEntry) -> Boolean = { true }, afterFile: (File, ZipEntry) -> Unit = { _, _ ->}) {
         io {
-            val zip = ZipInputStream(LZMAInputStream(zip.inputStream().buffered()).buffered())
+            val zip = ZipInputStream(inputStream)
             var entry: ZipEntry? = null
 
             fun nextEntry(): Boolean {
