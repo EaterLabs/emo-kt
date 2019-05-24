@@ -63,14 +63,25 @@ class MinecraftExecutor(val profileLocation: String, val account: Account? = nul
                 classpath.add("minecraft.jar")
 
                 // Set default template variables and add variables from clientLock
-                val vars = hashMapOf(
-                    Pair("classpath", classpath.joinToString(File.pathSeparator)),
+                val vars = mutableMapOf(
+                    Pair("classpath", classpath.map {
+                        Paths.get(profileLocation, it).toRealPath().toString()
+                    }.joinToString(File.pathSeparator)),
                     Pair("user_type", "mojang"),
                     Pair("auth_uuid", account.uuid),
                     Pair("auth_player_name", account.displayName),
                     Pair("auth_access_token", account.accessToken),
-                    Pair("game_directory", profileLocation)
-                ) + clientLock.vars
+                    Pair("game_directory", Paths.get(profileLocation).toRealPath().toString())
+                )
+
+                vars.putAll(clientLock.vars)
+
+                if (!Paths.get(vars["natives_directory"]).isAbsolute) {
+                    vars.set(
+                        "natives_directory",
+                        Paths.get("$profileLocation/${vars["natives_directory"]}").toRealPath().toString()
+                    )
+                }
 
                 val gameArgs = processArguments(
                     clientLock.start!!.gameArguments,

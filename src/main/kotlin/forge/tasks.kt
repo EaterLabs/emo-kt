@@ -107,6 +107,7 @@ class FetchForgeLibraries : Process<EmoContext> {
     override fun getName() = "forge.v1.fetch_libraries"
     override fun getDescription() = "Fetching libraries for Forge"
 
+    @ExperimentalUnsignedTypes
     override suspend fun execute(context: EmoContext) {
         parallel((context.forgeManifest!! as Manifest).libraries) {
             if (it.clientreq === null && it.serverreq === null) {
@@ -160,7 +161,6 @@ class FetchForgeLibraries : Process<EmoContext> {
 
         io {
             val decompressed = XZInputStream(data.inputStream()).readBytes()
-            // val decompressedBuffer = ByteBuffer.wrap(decompressed)
             val decompressedLen = decompressed.size
 
             val blobLen = (decompressed[decompressedLen - 8].toUByte() and 0xFF.toUByte()).toInt() or
