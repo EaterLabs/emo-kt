@@ -73,7 +73,15 @@ class EmoContext(
     /**
      * List of servers to add when installing
      */
-    val servers: List<Server> = listOf()
+    val servers: List<Server> = listOf(),
+    /**
+     * If this install is an update
+     */
+    val isUpdate: Boolean = false,
+    /**
+     * Mods currently managed by emo, if this list contains a mod that's not in [EmoContext.mods] it will be deleted.
+     */
+    val managedMods: List<Mod> = listOf()
 ) {
     /**
      * Holds Forge manifest, if available

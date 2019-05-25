@@ -355,9 +355,38 @@ class EmoInstance {
      * Add profile with given [modpack] and [modpackVersion] on [location] with [name] to settings.
      * This function is used by the install workflow
      */
-    fun addProfile(modpack: Modpack, modpackVersion: ModpackVersion, location: String, name: String): Profile {
-        val profile = Profile(location, name, modpack.withoutVersions(), modpackVersion, Instant.now())
-        useSettings { settings -> settings.addProfile(profile) }
+    fun addProfile(
+        modpack: Modpack,
+        modpackVersion: ModpackVersion,
+        location: String,
+        name: String,
+        isUpdate: Boolean = false
+    ): Profile {
+        val (idx, oldProfile) = useSettings(true) { settings ->
+            val idx = settings.profiles.indexOfFirst {
+                it.location == location
+            }
+
+            Pair(idx, if (idx == -1) null else settings.profiles[idx])
+        }
+
+        val createdOn = if (oldProfile != null || !isUpdate)
+            Instant.now()
+        else
+            oldProfile?.createdOn ?: Instant.now()
+
+        val profile = Profile(location, name, modpack.withoutVersions(), modpackVersion, createdOn, createdOn)
+
+        if (idx == -1) {
+            useSettings {
+                it.addProfile(profile)
+            }
+        } else {
+            useSettings {
+                it.profiles[idx] = profile
+            }
+        }
+
         return profile
     }
 
@@ -406,12 +435,14 @@ class EmoInstance {
     /**
      * Get a [MinecraftExecutor] for given [location] and [account]
      */
-    fun getMinecraftExecutor(location: String, account: Account, java: String = "java") = MinecraftExecutor(location, account, java)
+    fun getMinecraftExecutor(location: String, account: Account, java: String = "java") =
+        MinecraftExecutor(location, account, java)
 
     /**
      * Get a [MinecraftExecutor] for given [profile] and [account]
      */
-    fun getMinecraftExecutor(profile: Profile, account: Account, java: String = "java") = getMinecraftExecutor(profile.location, account, java)
+    fun getMinecraftExecutor(profile: Profile, account: Account, java: String = "java") =
+        getMinecraftExecutor(profile.location, account, java)
 
 
     suspend fun getAvailableJRE(environment: EmoEnvironment = EmoEnvironment()): LauncherArtifact? {

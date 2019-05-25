@@ -139,7 +139,8 @@ class AddProfile : Process<EmoContext> {
             context.modpack!!,
             context.modpackVersion!!,
             context.installLocation.toString(),
-            context.name ?: context.modpack.name
+            context.name ?: context.modpack.name,
+            context.isUpdate
         )
 
         context.profile = profile
@@ -163,6 +164,17 @@ class FetchMods : Process<EmoContext> {
                 .await()
         }
 
+        val modMap = context.mods.map { it.name to it.url }.toMap()
+
+        for (mod in context.managedMods) {
+            if (!modMap.containsKey(mod.name)) {
+                val file = Paths.get(context.installLocation.toString(), "mods", mod.name + ".jar").toFile()
+
+                if (file.exists()) {
+                    file.delete()
+                }
+            }
+        }
     }
 }
 
