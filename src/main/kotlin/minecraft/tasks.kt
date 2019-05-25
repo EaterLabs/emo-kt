@@ -1,11 +1,13 @@
 package me.eater.emo.minecraft
 
 import com.beust.klaxon.Klaxon
+import com.flowpowered.nbt.*
+import com.flowpowered.nbt.stream.NBTInputStream
+import com.flowpowered.nbt.stream.NBTOutputStream
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.requests.download
 import com.github.kittinunf.fuel.coroutines.awaitByteArrayResponse
 import com.github.kittinunf.fuel.coroutines.awaitString
-import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.github.kittinunf.fuel.httpDownload
 import com.github.kittinunf.fuel.httpGet
 import me.eater.emo.EmoContext
@@ -246,5 +248,68 @@ class FetchMinecraftJar : Process<EmoContext> {
             .httpDownload()
             .fileDestination { _, _ -> Paths.get(context.installLocation.toString(), path).toFile() }
             .awaitByteArrayResponse()
+    }
+}
+
+@Suppress("BlockingMethodInNonBlockingContext", "UNCHECKED_CAST")
+class AddServers : Process<EmoContext> {
+    override fun getName() = "minecraft.add_servers"
+    override fun getDescription() = "Adding preconfigured servers"
+
+    override suspend fun execute(context: EmoContext) {
+        val serversFile = File(context.installLocation.toString() + "/servers.dat")
+        val map = context.servers
+            .map { it.ip to it }
+            .toMap()
+        val todo = mutableSetOf(*map.keys.toTypedArray())
+
+        val serverList: MutableList<MutableMap<String, Tag<*>>> = if (serversFile.exists()) {
+            val tag = NBTInputStream(serversFile.inputStream(), false).let {
+                val tag = it.readTag()
+                it.close()
+                tag
+            }
+
+            (((tag as? CompoundTag)?.value?.get("servers") as? ListTag<*>) ?: ListTag(
+                "servers",
+                CompoundTag::class.java,
+                listOf()
+            )).value
+                .toMutableList()
+                .map { it?.value as? CompoundTag }
+                .flatMap { if (it == null) listOf<MutableMap<String, Tag<*>>>() else listOf(it.value.toMutableMap()) }
+                .toMutableList()
+        } else mutableListOf()
+
+        for (server in serverList) {
+            val entry = map[(server["ip"] as? StringTag)?.value ?: continue] ?: continue
+            server["name"] = StringTag("name", entry.name)
+            todo.remove(entry.ip)
+        }
+
+        for (item in todo) {
+            val entry = map[item] ?: continue
+            serverList.add(
+                mapOf(
+                    "ip" to StringTag("ip", entry.ip),
+                    "name" to StringTag("name", entry.name)
+                ) as MutableMap<String, Tag<*>>
+            )
+        }
+
+        val newTag = CompoundTag("", CompoundMap(mapOf(
+            "servers" to ListTag(
+                "servers", CompoundTag::class.java,
+                serverList.map {
+                    CompoundTag("", CompoundMap(it))
+                }
+            )
+        )))
+
+        val outputStream = serversFile.outputStream()
+        val nbtOutputStream = NBTOutputStream(outputStream, false)
+        nbtOutputStream.writeTag(newTag)
+        nbtOutputStream.flush()
+        nbtOutputStream.close()
     }
 }

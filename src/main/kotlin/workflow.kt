@@ -25,6 +25,7 @@ fun getInstallWorkflow(ctx: EmoContext): Workflow<EmoContext> {
         bind(FetchMinecraftAssets())
         bind(LoadForgeManifest())
         bind(FetchMinecraftJar())
+        bind(AddServers())
 
         // Forge v1
         bind(FetchForgeVersions())
@@ -102,11 +103,22 @@ fun getInstallWorkflow(ctx: EmoContext): Workflow<EmoContext> {
 
         step("emo.fetch_mods", "emo.post_actions")
         step("noop", {
-            if (it.overlay == null)
-                "emo.create_profile"
-            else
-                "emo.run_overlay"
+            if (it.servers.count() > 0)
+                return@step "minecraft.add_servers"
+
+            if (it.overlay != null)
+                return@step "emo.run_overlay"
+
+            "emo.create_profile"
         }, name = "emo.post_actions", description = "Running post-processing actions")
+
+        step("minecraft.add_servers") {
+            if (it.overlay != null)
+                return@step "emo.run_overlay"
+
+            "emo.create_profile"
+        }
+
         step("emo.run_overlay", "emo.create_profile")
         step("emo.create_profile", { if (it.target == Target.Client) "emo.create_client_lock" else null })
         step(

@@ -89,6 +89,27 @@ class WorkflowBuilder<C> {
     /**
      * Add new step
      *
+     * @param process Which process should be used in this step
+     * @param name The name of this step
+     * @param description The description of this step
+     * @param router Function that selects which step should be executed after this, if it returns null this is the last step in the workflow
+     */
+    fun step(
+        process: String,
+        name: String = process,
+        description: String = processes[process]!!.getDescription(),
+        router: (context: C) -> String?
+    ) {
+        step(process, object : Router<C> {
+            override fun route(context: C): String? {
+                return router(context)
+            }
+        }, name, description)
+    }
+
+    /**
+     * Add new step
+     *
      * @param process Process that should be used in this step, is also immediately bound to this workflow
      * @param router The router to use after executing this step
      * @param name The name of this step

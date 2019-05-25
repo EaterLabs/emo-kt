@@ -11,6 +11,7 @@ import me.eater.emo.minecraft.dto.manifest.IManifest
 import me.eater.emo.minecraft.dto.manifest.StartManifest
 import me.eater.emo.minecraft.dto.minecraft_versions.Version
 import me.eater.emo.minecraft.dto.minecraft_versions.VersionsManifest
+import me.eater.emo.minecraft.dto.nbt.Server
 import java.io.File
 import java.nio.file.Path
 
@@ -68,7 +69,11 @@ class EmoContext(
     /**
      * Overlay used to distribute resource packs and configs
      */
-    val overlay: String? = modpackVersion?.overlay
+    val overlay: String? = modpackVersion?.overlay,
+    /**
+     * List of servers to add when installing
+     */
+    val servers: List<Server> = listOf()
 ) {
     /**
      * Holds Forge manifest, if available
