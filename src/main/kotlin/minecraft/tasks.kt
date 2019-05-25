@@ -289,12 +289,7 @@ class AddServers : Process<EmoContext> {
 
         for (item in todo) {
             val entry = map[item] ?: continue
-            serverList.add(
-                mapOf(
-                    "ip" to StringTag("ip", entry.ip),
-                    "name" to StringTag("name", entry.name)
-                ) as MutableMap<String, Tag<*>>
-            )
+            serverList.add(entry.toNBTMap().toMutableMap())
         }
 
         val newTag = CompoundTag("", CompoundMap(mapOf(
