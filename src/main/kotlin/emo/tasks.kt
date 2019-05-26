@@ -158,10 +158,14 @@ class FetchMods : Process<EmoContext> {
             val path = Paths.get(context.installLocation.toString(), "mods", it.name + ".jar")
             Files.createDirectories(path.parent)
 
-            it.url
-                .httpDownload()
-                .fileDestination { _, _ -> path.toFile() }
-                .await()
+            try {
+                it.url
+                    .httpDownload()
+                    .fileDestination { _, _ -> path.toFile() }
+                    .await()
+            } catch (t: Throwable) {
+                throw RuntimeException("Failed downloading mod at ${it.url}: ${t.message}", t)
+            }
         }
 
         val modMap = context.mods.map { it.name to it.url }.toMap()
