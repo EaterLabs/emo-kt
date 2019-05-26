@@ -1,6 +1,5 @@
 package me.eater.emo.utils
 
-import org.tukaani.xz.LZMAInputStream
 import java.io.File
 import java.io.InputStream
 import java.nio.file.Files
@@ -9,7 +8,12 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
 object ZipUtil {
-    suspend fun unpack(inputStream: InputStream, target: String, beforeFile: (ZipEntry) -> Boolean = { true }, afterFile: (File, ZipEntry) -> Unit = { _, _ ->}) {
+    suspend fun unpack(
+        inputStream: InputStream,
+        target: String,
+        beforeFile: (ZipEntry) -> Boolean = { true },
+        afterFile: (File, ZipEntry) -> Unit = { _, _ -> }
+    ) {
         io {
             val zip = ZipInputStream(inputStream)
             var entry: ZipEntry? = null
@@ -31,7 +35,9 @@ object ZipUtil {
                     continue
                 }
 
-                val outputStream = File(path).outputStream()
+                val outputFile = File(path)
+                outputFile.parentFile.mkdirs()
+                val outputStream = outputFile.outputStream()
                 zip.buffered().copyTo(outputStream)
                 zip.closeEntry()
                 outputStream.close()
