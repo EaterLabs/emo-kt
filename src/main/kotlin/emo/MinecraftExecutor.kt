@@ -68,8 +68,15 @@ class MinecraftExecutor(val profileLocation: String, val account: Account? = nul
                         Paths.get(profileLocation, it).toRealPath().toString()
                     }.joinToString(File.pathSeparator)),
                     Pair("user_type", "mojang"),
-                    Pair("auth_uuid", account.uuid),
-                    Pair("auth_player_name", account.displayName),
+                    Pair(
+                        "auth_uuid",
+                        account.uuid ?: throw RuntimeException("User has no uuid (are you using a demo account?)")
+                    ),
+                    Pair(
+                        "auth_player_name",
+                        account.displayName
+                            ?: throw RuntimeException("User has no uuid (are you using a demo account?)")
+                    ),
                     Pair("auth_access_token", account.accessToken),
                     Pair("game_directory", Paths.get(profileLocation).toRealPath().toString())
                 )
