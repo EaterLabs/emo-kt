@@ -468,11 +468,11 @@ data class Account(
     /**
      * UUID of account known by Mojang account services
      */
-    val uuid: String,
+    val uuid: String?,
     /**
      * Display name of account, used in e.g. Minecraft
      */
-    val displayName: String,
+    val displayName: String?,
     /**
      * Username that is used for login [is with non-legacy accounts an email-address]
      */
@@ -489,8 +489,8 @@ data class Account(
     companion object {
         fun fromMap(map: Map<String, Any>): Account {
             return Account(
-                map["uuid"].toString(),
-                map["displayName"] as String,
+                map["uuid"]?.toString(),
+                map["displayName"] as? String,
                 map["username"] as String,
                 map["accessToken"] as String,
                 map["userid"] as String
