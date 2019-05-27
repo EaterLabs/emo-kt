@@ -177,6 +177,10 @@ class EmoInstance {
                 throw Error("Failed logging in: Unknown reason")
             }
 
+            if (authService.availableProfiles.isEmpty()) {
+                throw Error("Failed logging in: Demo account")
+            }
+
             if (save) {
                 useSettings { settings ->
                     settings.addAccount(
