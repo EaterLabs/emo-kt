@@ -162,7 +162,16 @@ data class Settings(
                     println(e)
                 }
 
-                if (settings !== null) return settings
+                if (settings !== null) return settings.also {
+                    // Remove invalid accoutns
+                    val toDelete = it.accounts.filter {
+                        it.value["uuid"] != null
+                    }.keys
+
+                    toDelete.forEach { key ->
+                        it.accounts.remove(key)
+                    }
+                }
             }
 
             return Settings(UUID.randomUUID().toString()).apply {
