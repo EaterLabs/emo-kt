@@ -439,13 +439,13 @@ class EmoInstance {
     /**
      * Get a [MinecraftExecutor] for given [location] and [account]
      */
-    fun getMinecraftExecutor(location: String, account: Account, java: String = "java") =
-        MinecraftExecutor(location, account, java)
+    suspend fun getMinecraftExecutor(location: String, account: Account, java: String = "java") =
+        MinecraftExecutor(location, getAccountViaAuthentication(account.uuid!!, true), java)
 
     /**
      * Get a [MinecraftExecutor] for given [profile] and [account]
      */
-    fun getMinecraftExecutor(profile: Profile, account: Account, java: String = "java") =
+    suspend fun getMinecraftExecutor(profile: Profile, account: Account, java: String = "java") =
         getMinecraftExecutor(profile.location, account, java)
 
 

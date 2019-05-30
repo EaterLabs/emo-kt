@@ -279,11 +279,6 @@ data class Profile(
      */
     var lastTouched: Instant = if (createdOn == Instant.MIN) Instant.now() else createdOn
 ) {
-    /**
-     * Get [MinecraftExecutor] for this profile with [account]
-     */
-    fun getExecutor(account: Account) = MinecraftExecutor(location, account)
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
