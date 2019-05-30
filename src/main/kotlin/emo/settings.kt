@@ -165,7 +165,7 @@ data class Settings(
                 if (settings !== null) return settings.also {
                     // Remove invalid accoutns
                     val toDelete = it.accounts.filter {
-                        it.value["uuid"] != null
+                        it.value["uuid"] == null
                     }.keys
 
                     toDelete.forEach { key ->
