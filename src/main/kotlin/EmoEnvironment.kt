@@ -30,7 +30,7 @@ class EmoEnvironment {
      */
     val osArch: String by lazy {
         System.getProperty("os.arch").let {
-            if (Regex("""^(x8664|amd64|ia32e|em64t|x64)${'$'}""").matches(it))
+            if (Regex("""^(x86_?64|amd64|ia32e|em64t|x64)${'$'}""").matches(it))
                 "64"
             else
                 "32"
