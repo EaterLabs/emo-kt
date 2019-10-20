@@ -51,10 +51,6 @@ fun getInstallWorkflow(ctx: EmoContext): Workflow<EmoContext> {
         start("start")
 
         step("noop", step@{ ctx: EmoContext ->
-            if (ctx.forgeVersion?.isStatic() == false && !ctx.minecraftVersion.isStatic()) {
-                return@step "forge.fetch_versions"
-            }
-
             return@step "minecraft.fetch_versions"
         }, name = "start", description = "Starting installer")
 
