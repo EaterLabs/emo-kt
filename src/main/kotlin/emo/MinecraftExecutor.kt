@@ -21,10 +21,8 @@ import java.nio.file.Paths
 class MinecraftExecutor(val profileLocation: String, val account: Account? = null, val java: String = "java") {
     var process: Process? = null
 
-    /**
-     * Start minecraft for given [profileLocation] and [account], returns running [Process]
-     */
-    fun execute(): Process {
+
+    fun createArgs(): List<String> {
         val profile = Profile.fromJson(File("$profileLocation/emo.json").readText())!!
 
         val launchOptionsFile = Paths.get(profileLocation, ".emo/launch.json").toFile()
@@ -53,18 +51,27 @@ class MinecraftExecutor(val profileLocation: String, val account: Account? = nul
                 val environment = EmoEnvironment()
 
                 val classpath
-                        : MutableList<String> =
-                    manifest.getLibraries()
+                        : MutableList<String> = mutableListOf()
+                classpath.addAll(clientLock.start?.extraLibraries?.map { "libraries/$it" } ?: listOf())
+                    classpath.addAll(manifest.getLibraries()
                         .filter { it.downloads.artifact !== null && environment.passesRules(it.rules) }
                         .map { "libraries/" + it.downloads.artifact!!.path }
-                        .toMutableList()
+                        .toMutableList())
 
-                classpath.addAll(clientLock.start?.extraLibraries?.map { "libraries/$it" } ?: listOf())
                 classpath.add("minecraft.jar")
+
+                val nonUniqueClasspath = mutableListOf<String>();
+                for (cp in classpath) {
+                    if (nonUniqueClasspath.contains(cp)) {
+                        continue
+                    }
+
+                    nonUniqueClasspath.add(cp)
+                }
 
                 // Set default template variables and add variables from clientLock
                 val vars = mutableMapOf(
-                    Pair("classpath", classpath.map {
+                    Pair("classpath", nonUniqueClasspath.map {
                         Paths.get(profileLocation, it).toRealPath().toString()
                     }.joinToString(File.pathSeparator)),
                     Pair("user_type", "mojang"),
@@ -124,6 +131,15 @@ class MinecraftExecutor(val profileLocation: String, val account: Account? = nul
                 )
             }
         }
+
+        return args
+    }
+
+    /**
+     * Start minecraft for given [profileLocation] and [account], returns running [Process]
+     */
+    fun execute(): Process {
+        val args = createArgs();
 
         process = ProcessBuilder().apply {
             command(args)
