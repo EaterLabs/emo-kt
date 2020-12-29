@@ -143,12 +143,19 @@ class ImportCommand(
  */
 @Parameters(commandDescription = "Start minecraft from a emo profile install")
 class StartCommand(
+    @Parameter(names = ["-p", "--print-only"], description = "If we should only print the command we will execute")
+    var printOnly: Boolean = false,
     @Parameter(description = "[profile location]", required = true)
     var location: List<String> = arrayListOf()
 ) : Command {
     override fun execute() {
         val executor = runBlocking {
             MinecraftExecutor(location[0].expandTilde(), EmoInstance().getAccountViaAuthentication())
+        }
+
+        if (printOnly) {
+            print(executor.createArgs().joinToString("\n"))
+            return;
         }
 
         executor

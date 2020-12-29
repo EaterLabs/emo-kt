@@ -27,7 +27,7 @@ import java.nio.file.Paths
 import java.util.jar.JarFile
 
 const val MINECRAFT_VERSIONS_MANIFEST = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
-const val MINECRAFT_ASSESTS_HOST_URL = "https://resources.download.minecraft.net/"
+const val MINECRAFT_ASSETS_HOST_URL = "https://resources.download.minecraft.net/"
 
 /**
  * Process that fetches version manifest
@@ -205,7 +205,7 @@ class FetchMinecraftAssetIndex : Process<EmoContext> {
  */
 class FetchMinecraftAssets : Process<EmoContext> {
     override fun getName() = "minecraft.fetch_assets"
-    override fun getDescription() = "Downloading assests for Minecraft"
+    override fun getDescription() = "Downloading assets for Minecraft"
 
     override suspend fun execute(context: EmoContext) {
         parallel(context.assetIndex!!.objects.entries, 20) {
@@ -216,7 +216,7 @@ class FetchMinecraftAssets : Process<EmoContext> {
 
             Files.createDirectories(path.parent)
 
-            (MINECRAFT_ASSESTS_HOST_URL + assetId)
+            (MINECRAFT_ASSETS_HOST_URL + assetId)
                 .httpDownload()
                 .fileDestination { _, _ -> path.toFile() }
                 .awaitByteArrayResponse()
