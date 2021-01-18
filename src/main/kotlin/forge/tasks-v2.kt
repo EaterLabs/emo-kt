@@ -65,7 +65,10 @@ class RunInstaller : Process<EmoContext> {
                 .newInstance(installProfile, progressCallback)
 
         val libraryDir = Paths.get(context.installLocation.toString(), "libraries").toFile()
-        val minecraftLoc = Paths.get(context.installLocation.toString(), "minecraft.jar").toFile()
+        val minecraftLoc = Paths.get(context.installLocation.toString(), when (context.target) {
+            Target.Client -> "minecraft.jar"
+            Target.Server -> "minecraft_server.${context.minecraftVersion.selector}.jar"
+        }).toFile()
 
         val successLibraries = try {
             actionClass.getDeclaredMethod("downloadLibraries", File::class.java, Predicate::class.java)
